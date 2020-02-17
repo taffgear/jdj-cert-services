@@ -1,6 +1,8 @@
 const vision = require('@google-cloud/vision').v1;
 const fs = require('fs');
 
+const types = [ 'Laspartners Multiweld', 'Nemad Maritime Safety', 'Technisch Buro J. Verheij' ];
+
 /**
  * Perform batch file annotation
  *
@@ -11,27 +13,37 @@ async function PDFToText(filePath) {
 
 	// Supported mime_type: application/pdf, image/tiff, image/gif
 	// The service can process up to 5 pages per document file
-	const pages = [1, 2];
+	const pages = [ 1, 2 ];
 	const requestsElement = {
 		inputConfig: {
 			mimeType: 'application/pdf',
 			content: fs.readFileSync(filePath).toString('base64')
 		},
-		features: [{
-			type: 'DOCUMENT_TEXT_DETECTION'
-		}],
+		features: [
+			{
+				type: 'DOCUMENT_TEXT_DETECTION'
+			}
+		],
 		pages
 	};
 
 	const requests = [ requestsElement ];
-	
-	try {
-		const responses = await client.batchAnnotateFiles({ requests: requests })
-		return responses[0].responses[0].responses
 
+	try {
+		const responses = await client.batchAnnotateFiles({ requests: requests });
+		return responses[0].responses[0].responses;
 	} catch (e) {
 		console.error(e);
-	}	
+	}
+}
+
+function getTemplateType(txt) {
+	// TODO: store template data in redis
+	return types.reduce((acc, t) => {
+		if (txt.indexOf(t) >= 0) acc = t;
+
+		return acc;
+	}, null);
 }
 
 async function main() {
@@ -54,8 +66,8 @@ async function main() {
 		txt = fs.readFileSync(test).toString();
 	}
 
-	console.log(txt);
-
+	const type = getTemplateType(txt);
+	console.log(type);
 }
 
 main();
