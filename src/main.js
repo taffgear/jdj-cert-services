@@ -1,7 +1,15 @@
 const vision = require('@google-cloud/vision').v1;
 const fs = require('fs');
 
-const types = [ 'Laspartners Multiweld', 'Nemad Maritime Safety', 'Technisch Buro J. Verheij' ];
+const types = [
+	'Laspartners Multiweld',
+	'Nemad Maritime Safety',
+	'Technisch Buro J. Verheij',
+	'MasTwin',
+	'smit polyweb',
+	'Technics Trading & Calibration',
+	'BMWT'
+];
 
 /**
  * Perform batch file annotation
