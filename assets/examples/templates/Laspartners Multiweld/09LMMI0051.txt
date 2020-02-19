@@ -1,0 +1,286 @@
+LASPARTNERS
+MULTIWELD
+Validation Certificate
+NEN-EN-50504
+Certificate number 2019-NEN-EN-50504-38680
+Client
+: J. de Jonge Lease BV
+Riga 3
+2993 LW Barendrecht
+Validated by
+Laspartners Multiweld
+Riga 3
+2993 LW BARENDRECHT
+Acting upon instructions from
+: J. de Jonge lease
+Brand and type
+Serial number
+: Lincoln Electric, Powerwave S500
+: 01190105265
+: 09LMMI0051
+: 47.7 V
+Machine No
+Open Voltage Uo
+Machine range
+: min.: 40 A
+: min.: 50 A
+Validation range
+Current
+max.: 550 A
+max.: 400 A
+max.: 30 v
+Voltage
+: min.:
+14 V
+Standards
+NEN-EN-ISO 17662:2005
+NEN-EN 50504:2008
+Grade of validation
+:
+Standard
+: Accuracy
+: CV
+Type of validation
+Equipment function under test
+Method of validation
+Welding process
+Date of Validation
+: Load resistor
+: MMA
+8-7-2019
+GTAW
+GMAW
+Results of Measurements in attached form
+Used measuring instrument(s);
+Fluke 175
+NI16R
+Serial No.:
+Serial No.:
+38350605
+26500023
+Certificate No.:
+Certificate No.:
+N-63853
+N-63607
+Final result
+: PASSED
+Validated by
+: Jan Willem van der Vorm
+Date of certificate
+: 09-07-2019
+Autograph
+LASPARTNERS
+MULTIWELD
+Measurements Results
+Certificate number 2019-NEN-EN-50504-38680
+Client
+: J. de Jonge Lease BV
+Riga 3
+2993 LW
+Barendrecht
+Validated by
+Laspartners Multiweld
+Riga 3
+2993 LW BARENDRECHT
+Engineer
+: Jan Willem van der Vorm
+Brand and type
+Serial number
+Machine No
+: Lincoln Electric, Powerwave S500
+: 01190105265
+: 09LMMI0051
+402 V
+401 V
+403 V
+Supply voltage
+Ambient temperature
+Cables
+Setting slope / weld dynamics
+: 3 phases:
+: 23,6 °C
+: 15
+Reading
+Deviation
+Measured
+Value #1
+Measured
+Value #2
+Mean
+Value
+Мах.
+allowed
+Within
+range
+50 A
+50.5 A
+50.3 A
+50.4 A
+0.4 A
+13.75 A
+Yes
+Amperage
+138 A
+139.1 A
+138.7 A
+138.9 A
+13.75 A
+Yes
+225 A
+226.7 A
+226.6 A
+13.75 A
+Yes
+Digital
+meters
+226.6 A
+315.4 A
+0.9 A
+1.6 A
+2.4 A
+3.0 A
+313 A
+315.5 A
+315.3 A
+13.75 A
+Yes
+400 A
+403 A
+403 A
+403.0 A
+13.75 A
+Yes
+14 V
+13.9 V
+13.9 V
+13.9 V
+0.1 V
+1.19 V
+Yes
+Voltage
+18 V
+18.1 V
+17.8 V
+18.0 V
+0.0 v
+1.19 V
+Yes
+22 V
+21.7 V
+21.8 V
+21.8 V
+0.2 V
+1.19 V
+Yes
+Digital
+meters
+25.7 V
+25.7 V
+25.7 V
+0.3 V
+1.19 V
+Yes
+26 V
+30 V
+29.7 V
+29.7 V
+29.7 V
+0.3 V
+1.19 V
+Yes
+M
+ASPARTNERS
+Onderhoudsrapport
+Keuring NEN-3140 &
+NEN-EN-IEC 60974-4
+Datum
+: 8-7-2019
+: J. de Jonge Lease BV
+Firma
+Telefoon
+: +31 10 248 58 00
+: DHR R.Langerak
+Contactpersoon
+E-mail
+Adres
+: Riga 3
+: 2993 LW
+Postcode - Plaats
+Barendrecht
+Onderhoud van
+:
+Mig
+Tig
+Elektroden
+Plasma
+Overig
+Merk
+Type
+: Lincoln Electric
+: Powerwave S500
+: 01190105265
+: 09LMMI0051
+Serienummer
+Machinenummer klant
+Netspanning
+: 402 V
+Omschrijving werkzaamheden
+Inwendig vrijmaken van ijzerhoudend stof en ander vuil
+Elektrische verbindingen
+Mechanische verbindingen
+Schakelcontacten van magneetschakelaars, relais, etc.
+Steekcontacten van printen
+Controleren van bijbehorende kabels (secundair en stuurstroom) op slijtage, juiste aansluiting en trekontlasting
+Juiste werking stroombron
+Waterpomp en waterdrukschakelaar, evt. luchtdrukschakelaar plasma
+[
+Controleren van mechanische gedeelte op slijtage, speling op lagers en bussen, smering van mechanische gedeelte
+Draadaanvoer op uitlijning, druk, juiste afstelling
+Toorts c.q. pistool
+Draadaanvoer controleren op juiste werking
+Proeflassen met geheel
+Werking VRD
+Werking relevante veiligheidsgerelateerde functies
+NEN-3140 & NEN-EN-IEC 60974-4
+Meetinstrument
+Visuele controle
+Fun
+:
+Ja
+Nee
+Megger MIT230 SN:101350368 / DCM305E SN: 17061155
+Ja O Nee Functionele controle
+I O II III
+0.03 ohm
+:
+:
+:
+Beschermingsklasse
+Weerstand beschermingsleiding
+Gemeten lekstroom
+mA
+:
+1000 Mohm
+:
+1000 Mohm
+Isolatieweerstand tussen voeding
+primair en secundair (las gedeelte)
+Isolatieweerstand tussen voeding
+primair en behuizing PE
+Isolatiewaarde tussen secundair deel
+en behuizing
+Open spanning: gelijkspanning
+:
+1000 Mohm
+:
+:
+47.7 Volt
+Volt
+Open spanning: wisselspanning
+Goedgekeurd
+Afgekeurd
+Keuringsresultaat
+Opmerkingen
+Nieuwe machine
+Monteur
+Jan Willem van der Vorm
