@@ -1,0 +1,287 @@
+LASPARTNERS
+MULTIWELD
+Validation Certificate
+NEN-EN-50504
+Certificate number 2019-NEN-EN-50504-38735
+Client
+: J. de Jonge Lease BV
+Riga 3
+2993 LW Barendrecht
+Validated by
+Laspartners Multiweld
+Riga 3
+2993 LW BARENDRECHT
+Acting upon instructions from
+: J de Jonge
+Brand and type
+Serial number
+: Lincoln Electric, Invertec 220TPX
+: P1181200723
+Machine No
+Open Voltage Uo
+: 09LMTG025
+: 52 v
+Machine range
+: min.: 50 A
+Validation range
+Current
+: min.:
+: min.:
+50 A
+18 V
+max.: 220 A
+max.: 170 A
+max.: 30 v
+Voltage
+Standards
+NEN-EN-ISO 17662:2005
+NEN-EN 50504:2008
+Grade of validation
+:
+Standard
+: Accuracy
+: CC
+Type of validation
+Equipment function under test
+Method of validation
+Welding process
+Date of Validation
+: Load resistor
+: OMMA
+: 9-7-92019
+GTAW
+GMAW
+Results of Measurements in attached form
+Used measuring instrument(s);
+Nieaf ampere meter NI16R
+Certificate No.:
+Serial No.:
+Serial No.:
+26500045
+38200653WS
+Fluke 117
+Certificate No.:
+N-63949
+Final result
+: PASSED
+Validated by
+: Gerrit Rikkers
+Date of certificate
+:
+10-07-2019
+Autograph
+LASPARTNERS
+MULTIWELD
+Measurements Results
+Certificate number 2019-NEN-EN-50504-38735
+Client
+: J. de Jonge Lease BV
+Riga 3
+2993 LW
+Barendrecht
+Validated by
+Laspartners Multiweld
+Riga 3
+2993 LW BARENDRECHT
+Engineer
+: Gerrit Rikkers
+Brand and type
+Serial number
+Machine No
+: Lincoln Electric, Invertec 220TPX
+: P1181200723
+: 09LMTG025
+236 V
+V
+v
+Supply voltage
+Ambient temperature
+Cables
+Setting slope / weld dynamics
+: 3 phases:
+: 21 °C
+: 10
+Reading
+Deviation
+Measured
+Value #1
+Measured
+Value #2
+Mean
+Value
+Мах.
+allowed
+Within
+range
+50 A
+50 A
+50.0 A
+0.0 A
+5.5 A
+Yes
+50 A
+80 A
+Amperage
+80 A
+80 A
+80.0 A
+0.0 A
+5.5 A
+Yes
+110 A
+110 A
+110.3 A
+5.5 A
+Yes
+Digital
+meters
+110.5 A
+140 A
+140 A
+140 A
+140.0 A
+0.3 A
+0.0 A
+0.0 A
+5.5 A
+Yes
+170 A
+170 A
+170 A
+170.0 A
+5.5 A
+Yes
+18 v
+17.7 V
+17.7 V
+0.3 V
+1.3 V
+Yes
+Voltage
+17.7 V
+20.7 V
+21 V
+20.7 V
+1.3 V
+Yes
+24 V
+23.7 V
+23.7 V
+1.3 V
+Yes
+Digital
+meters
+20.7 V
+23.7 V
+26.6 V
+29.6 V
+0.3 V
+0.3 V
+0.4 V
+0.4 V
+27 V
+26.6 V
+26.6 V
+1.3 V
+Yes
+30 V
+/
+29.6 V
+29.6 V
+1.3 V
+Yes
+M
+SPARTNER
+MULTIWELD
+ASPARTNERS
+Onderhoudsrapport
+Keuring NEN-3140 &
+NEN-EN-IEC 60974-4
+Datum
+: 9-7-92019
+: J. de Jonge Lease BV
+Firma
+Telefoon
+: +31 10 248 58 00
+: DHR J. de Jonge
+Contactpersoon
+E-mail
+Adres
+: Riga 3
+: 2993 LW
+Postcode - Plaats
+Barendrecht
+Onderhoud van
+:
+Mig
+rig
+Elektroden
+Plasma
+Overig
+Merk
+Type
+: Lincoln Electric
+: Invertec 220TPX
+· P1181200723
+: 09LMTG025
+Serienummer
+Machinenummer klant
+Netspanning
+: 236 V
+Omschrijving werkzaamheden
+Inwendig vrijmaken van ijzerhoudend stof en ander vuil
+Elektrische verbindingen
+Mechanische verbindingen
+Schakelcontacten van magneetschakelaars, relais, etc.
+Steekcontacten van printen
+Controleren van bijbehorende kabels (secundair en stuurstroom) op slijtage, juiste aansluiting en trekontlasting
+Juiste werking stroombron
+Waterpomp en waterdrukschakelaar, evt. luchtdrukschakelaar plasma
+Controleren van mechanische gedeelte op slijtage, speling op lagers en bussen, smering van mechanische gedeelte
+Draadaanvoer op uitlijning, druk, juiste afstelling
+Toorts c.q. pistool
+Draadaanvoer controleren op juiste werking
+Proeflassen met geheel
+Werking VRD
+Werking relevante veiligheidsgerelateerde functies
+NEN-3140 & NEN-EN-IEC 60974-4
+Meetinstrument
+Visuele controle
+Functionele controle
+:
+Ja
+Nee
+Megger MIT 230/101345581
+: Ja O Nee
+: IO II
+0.15 ohm
+Beschermingsklasse
+111
+Weerstand beschermingsleiding
+Gemeten lekstroom
+: mA
+: 1000 Mohm
+:
+1000 Mohm
+Isolatieweerstand tussen voeding
+primair en secundair (las gedeelte)
+Isolatieweerstand tussen voeding
+primair en behuizing PE
+Isolatiewaarde tussen secundair deel
+en behuizing
+Open spanning: gelijkspanning
+:
+1000 Mohm
+Open spanning: wisselspanning
+:
+:
+:
+52 Volt
+Volt
+7 Goedgekeurd
+0
+Afgekeurd
+Keuringsresultaat
+Opmerkingen
+Monteur
+Gerrit Rikkers

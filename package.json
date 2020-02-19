@@ -9,6 +9,7 @@
   "author": "Mark Horsman",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/vision": "^1.8.0"
+    "@google-cloud/vision": "^1.8.0",
+    "moment": "^2.24.0"
   }
 }
