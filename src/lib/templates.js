@@ -78,7 +78,20 @@ module.exports = {
 		}
 	},
 	'Nemad Maritime Safety': {},
-	'Technisch Buro J. Verheij': {},
+	'Technisch Buro J. Verheij': {
+		text: {
+			articleNumber: {
+				regs: [ 'omschrijving(.*)identificatienummer' ]
+			},
+			serialNumber: {
+				regs: [ 'identificatienummer(.*)materiaal' ]
+			},
+			date: {
+				regs: [ 'Datum(.*)Meetrapport' ],
+				format: 'DD-MM-YYYY'
+			}
+		}
+	},
 	MasTwin: {},
 	'smit polyweb': {},
 	BMWT: {}
