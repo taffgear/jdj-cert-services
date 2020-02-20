@@ -1,46 +1,27 @@
 const moment = require('moment');
 
+// NOTE:
+// Possible better regex: (?<=String1 : )(.*)(?= String2 )
+
 module.exports = {
 	'Laspartners Multiweld': {
 		text: {
 			articleNumber: {
-				positions: [
-					{
-						start: 'Machine No.:',
-						end: 'No-load voltage Uo'
-					},
-					{
-						start: 'Machine No :',
-						end: 'Open Voltage Uo'
-					},
-					{
-						start: 'Machine No.:',
-						end: 'Open Voltage Uo'
-					}
+				regs: [
+					'Machine No.:(.*)No-load voltage Uo',
+					'Machine No :(.*)Open Voltage Uo',
+					'Machine No.:(.*)Open Voltage Uo',
+					'Machinenummer klant :(.*)Netspanning'
 				]
 			},
 			serialNumber: {
-				positions: [
-					{
-						start: 'Serial number :',
-						end: 'Machine No'
-					},
-					{
-						start: 'Serienummer ',
-						end: 'Machinenummer klant'
-					}
-				]
+				regs: [ 'Serial number :(.*)Machine No', 'Serienummer (.*)Machinenummer klant' ]
 			},
 			date: {
-				positions: [
-					{
-						start: 'Date of Certificate:',
-						end: 'Autograph'
-					},
-					{
-						start: 'Date of certificate :',
-						end: 'Autograph'
-					}
+				regs: [
+					'Date of Certificate:(.*)Autograph',
+					'Date of certificate :(.*)Autograph',
+					'Datum :(.*)Firma'
 				],
 				format: 'DD-M-YYYY'
 			}
@@ -49,28 +30,13 @@ module.exports = {
 	LASPARTNERS: {
 		text: {
 			articleNumber: {
-				positions: [
-					{
-						start: 'Machinenummer klant .',
-						end: 'Netspanning'
-					}
-				]
+				regs: [ 'Machinenummer klant .(.*)Netspanning' ]
 			},
 			serialNumber: {
-				positions: [
-					{
-						start: 'Machinenummer klant .',
-						end: 'Netspanning'
-					}
-				]
+				regs: [ 'Machinenummer klant .(.*)Netspanning' ]
 			},
 			date: {
-				positions: [
-					{
-						start: 'Datum',
-						end: ': J. de Jonge Lease BV'
-					}
-				],
+				regs: [ 'Datum(.*): J. de Jonge Lease BV' ],
 				format: 'DD-MM-YYYY'
 			}
 		}
@@ -78,21 +44,11 @@ module.exports = {
 	'Onafhankelijk Controle Bureel': {
 		text: {
 			articleNumber: {
-				positions: [
-					{
-						start: 'Toestel/Install. ID:',
-						end: 'Plaats van onderzoek'
-					}
-				]
+				regs: [ 'Toestel/Install. ID:(.*)Plaats van onderzoek' ]
 			},
 			serialNumber: null,
 			date: {
-				positions: [
-					{
-						start: 'Datum van onderzoek:',
-						end: 'Periodiciteit'
-					}
-				],
+				regs: [ 'Datum van onderzoek:(.*)Periodiciteit' ],
 				format: 'DD/MM/YYYY'
 			}
 		}
@@ -100,22 +56,24 @@ module.exports = {
 	WERKBON: {
 		text: {
 			articleNumber: {
-				positions: [
-					{
-						start: 'REP5540/',
-						end: '/RL Debiteur'
-					}
-				]
+				regs: [ '/(.*)/' ]
 			},
 			serialNumber: null,
 			date: {
-				positions: [
-					{
-						start: 'Datum : ',
-						end: 'Werkbonnummer'
-					}
-				],
+				regs: [ 'Datum : (.*)Werkbonnummer' ],
 				format: 'DD-MM-YYYY'
+			}
+		}
+	},
+	'Technics Trading & Calibration': {
+		text: {
+			articleNumber: {
+				regs: [ 'Registratienummer:(.*)Naam klant' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ 'Datum kalibratie:(.*)Datum afgifte' ],
+				format: 'D-MM-YYYY'
 			}
 		}
 	},
@@ -123,27 +81,5 @@ module.exports = {
 	'Technisch Buro J. Verheij': {},
 	MasTwin: {},
 	'smit polyweb': {},
-	'Technics Trading & Calibration': {
-		text: {
-			articleNumber: {
-				positions: [
-					{
-						start: 'Registratienummer:',
-						end: 'Naam klant'
-					}
-				]
-			},
-			serialNumber: null,
-			date: {
-				positions: [
-					{
-						start: 'Datum kalibratie:',
-						end: 'Datum afgifte'
-					}
-				],
-				format: 'D-MM-YYYY'
-			}
-		}
-	},
 	BMWT: {}
 };

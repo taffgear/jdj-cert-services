@@ -3,7 +3,7 @@ const pdfUtil = require('pdf-to-text');
 const fs = require('fs');
 
 /**
- * Perform batch file annotation
+ * Extract text from PDF using either pdf-to-text library or Google Vision API
  *
  * @param filePath {string} Path to local pdf file, e.g. /path/document.pdf
  */
@@ -12,6 +12,8 @@ async function PDFToText(filePath, local = false) {
 		return new Promise(async (resolve, reject) => {
 			pdfUtil.pdfToText(filePath, (err, data) => {
 				if (err) return resolve(false);
+
+				// remove whitespace and return result
 				return resolve(data.replace(/\s\s+/g, ' '));
 			});
 		});
@@ -21,6 +23,7 @@ async function PDFToText(filePath, local = false) {
 
 	// Supported mime_type: application/pdf, image/tiff, image/gif
 	// The service can process up to 5 pages per document file
+	// We only need 3 pages so far
 	const pages = [ 1, 2, 3 ];
 	const requestsElement = {
 		inputConfig: {

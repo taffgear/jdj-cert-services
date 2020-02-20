@@ -6,7 +6,9 @@ const dataHelper = require('./lib/data');
 async function main() {
 	const file = process.env.FILE || null;
 	const test = process.env.TEST || false; // provide url to txt file
-	let txt, type, data;
+	const DEBUG = process.env.DEBUG || false;
+
+	let txt, type;
 
 	if (!file && !test) {
 		console.warning('No PDF input file given');
@@ -19,7 +21,7 @@ async function main() {
 		txt = fs.readFileSync(test).toString();
 	}
 
-	if (file) {
+	if (file && DEBUG) {
 		console.log(txt.replace(/(\r\n|\n|\r)/gm, ' '));
 	}
 
@@ -27,17 +29,24 @@ async function main() {
 
 	// fallback with Google Vision API
 	if (!type) {
-		txt = await textHelper.PDFToText(file, false);
-		console.log(txt);
+		const gtxt = await textHelper.PDFToText(file, false);
+
+		if (DEBUG) console.log(gtxt);
+
+		// try to get type again with new input
+		type = dataHelper.getTemplateType(gtxt);
+
+		// set input if first try gave no result
+		if (!txt.length) txt = gtxt;
 	}
-	type = dataHelper.getTemplateType(txt);
 
 	if (!type) {
 		console.error('No type found');
 	} else {
-		data = dataHelper.getData(txt, type);
+		const result = dataHelper.getData(txt, type);
+		const data = Object.assign(result || {}, { type });
 
-		console.log(Object.assign(data || {}, { type }));
+		console.log(JSON.stringify(data, null, 2));
 	}
 }
 
