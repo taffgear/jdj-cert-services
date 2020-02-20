@@ -21,26 +21,28 @@ function getData(txt, type) {
 	return Object.keys(settings.text).reduce((acc, k) => {
 		const cnf = settings.text[k];
 
-		if (!cnf || !cnf.start) return acc;
+		if (!cnf || !cnf.positions) return acc;
 
-		const matches = txt.replace(/(\r\n|\n|\r)/gm, ' ').match(cnf.start + '(.*)' + cnf.end);
+		const result = cnf.positions.reduce((acc, o) => {
+			if (acc) return acc;
 
-		if (!matches || matches.length < 1 || matches[1].length > 30) {
-			if (!cnf.fallback) return acc;
+			const matches = txt.replace(/(\r\n|\n|\r)/gm, ' ').match(o.start + '(.*)' + o.end);
 
-			const flb = cnf.fallback.reduce((acc, fn) => {
-				if (typeof fn !== 'function' || acc) return acc;
-
-				acc = fn(txt);
+			if (k === 'date' && matches && matches.length > 1) {
+				acc = matches[1];
 				return acc;
-			}, null);
+			}
 
-			if (flb) acc[k] = flb;
+			if (!matches || matches.length < 1 || matches[1].length > 30) return acc;
+
+			acc = matches[1].trim();
+
 			return acc;
-		}
+		}, null);
 
-		if (cnf.get && typeof cnf.get === 'function') acc[k] = cnf.get(matches[1]);
-		else acc[k] = matches[1].trim();
+		if (!result) return acc;
+
+		acc[k] = result;
 
 		if (k !== 'date') return acc;
 

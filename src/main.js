@@ -20,17 +20,25 @@ async function main() {
 	}
 
 	if (file) {
-		console.log(txt);
+		console.log(txt.replace(/(\r\n|\n|\r)/gm, ' '));
 	}
 
 	type = dataHelper.getTemplateType(txt);
 
 	// fallback with Google Vision API
-	if (!type) txt = await textHelper.PDFToText(file, false);
+	if (!type) {
+		txt = await textHelper.PDFToText(file, false);
+		console.log(txt);
+	}
 	type = dataHelper.getTemplateType(txt);
-	data = dataHelper.getData(txt, type);
 
-	console.log(data);
+	if (!type) {
+		console.error('No type found');
+	} else {
+		data = dataHelper.getData(txt, type);
+
+		console.log(Object.assign(data || {}, { type }));
+	}
 }
 
 main();
