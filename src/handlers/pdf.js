@@ -1,19 +1,13 @@
-async function run() {
-	await require('./lib/resources/rabbitmq')();
-}
+const textHelper = require('./../lib/text');
+const dataHelper = require('./../lib/data');
+const templates = require('./../lib/templates');
 
-async function main() {
-	const fs = require('fs');
-
-	const textHelper = require('./lib/text');
-	const dataHelper = require('./lib/data');
-	const templates = require('./lib/templates');
-
-	const file = process.env.FILE || null;
-	const test = process.env.TEST || false; // provide url to txt file
-	const DEBUG = process.env.DEBUG || false;
-
+module.exports = async function(msg) {
 	let txt, gtxt, type, result;
+
+	const file = msg.body.filename;
+	const test = msg.body.test;
+	const DEBUG = msg.body.debug;
 
 	if (!file && !test) {
 		console.warning('No PDF input file given');
@@ -47,6 +41,7 @@ async function main() {
 
 	if (!type) {
 		console.error('No type found');
+		msg.reject();
 	} else {
 		result = dataHelper.getData(txt, type);
 
@@ -59,8 +54,7 @@ async function main() {
 		const data = Object.assign(result || {}, { type });
 
 		console.log(JSON.stringify(data, null, 2));
-	}
-}
 
-// main();
-run();
+		msg.ack();
+	}
+};

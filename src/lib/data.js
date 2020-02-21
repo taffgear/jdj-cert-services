@@ -9,6 +9,8 @@ const articleNumberReg = /^([a-zA-Z0-9]){3,20}$/;
  * @param {String} txt 
  */
 function getTemplateType(txt) {
+	if (!txt) return null;
+
 	// remove new lines from text
 	const str = txt.replace(/(\r\n|\n|\r)/gm, ' ').toLocaleLowerCase();
 
@@ -45,7 +47,7 @@ const tryRegs = (k, regs, str) =>
 
 		if (k === 'articleNumber' && matches[1].length < 25) {
 			// remove spaces
-			acc = matches[1].replace(/\s/g, "").trim();
+			acc = matches[1].replace(/\s/g, '').trim();
 			return acc;
 		}
 
