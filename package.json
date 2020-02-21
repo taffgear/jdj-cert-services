@@ -10,10 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/vision": "^1.8.0",
+    "chokidar": "^3.3.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "nconf": "^0.10.0",
     "pdf-to-text": "0.0.7",
-    "rabbot": "^2.1.0"
+    "rabbot": "^2.1.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   }
 }

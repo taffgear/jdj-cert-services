@@ -1,8 +1,30 @@
+const path = require('path');
 const fs = require('fs');
+const rp = require('request-promise');
+
+const nconf = require('nconf');
+const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../config.json') });
 
 const textHelper = require('./../lib/text');
 const dataHelper = require('./../lib/data');
 const templates = require('./../lib/templates');
+
+async function findArticleByNumber(n) {
+	let result;
+
+	try {
+		result = await rp({
+			uri: cnf.get('api:uri') + `/stock/find/${n}`,
+			headers: { Authorization: 'Bearer ' + cnf.get('api:jwt_token') },
+			json: true
+		});
+	} catch (e) {
+		console.error(e.message);
+		return false;
+	}
+
+	return result;
+}
 
 module.exports = async function(msg) {
 	let txt, gtxt, type, result;
@@ -76,6 +98,11 @@ module.exports = async function(msg) {
 		const data = Object.assign(result || {}, { type });
 
 		console.log(JSON.stringify(data, null, 2));
+
+		if (data && data.articleNumber) {
+			const article = await findArticleByNumber(data.articleNumber);
+			console.log(article);
+		}
 
 		msg.ack();
 	}
