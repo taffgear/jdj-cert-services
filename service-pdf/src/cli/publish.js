@@ -1,4 +1,4 @@
-const constants = require('../lib/constants');
+const constants = require('../../../resources/constants');
 
 const CMD_EXCH = constants.CMD_EXCH;
 const PDF_BIND_KEY = constants.PDF_BIND_KEY;
@@ -10,7 +10,7 @@ const debug = process.env.DEBUG || false;
 const folder = process.env.FOLDER || false;
 
 const single = async () => {
-	rabbot = await require('../lib/resources/rabbitmq')();
+	rabbot = await require('../../../resources/rabbitmq')();
 
 	const body = { filename, test, debug };
 

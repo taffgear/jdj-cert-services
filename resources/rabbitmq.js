@@ -1,9 +1,9 @@
 const path = require('path');
 const rabbot = require('rabbot');
 const nconf = require('nconf');
-const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../config.json') });
+const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../config.json') });
 
-const constants = require('../constants');
+const constants = require('./constants');
 
 const CMD_EXCH = constants.CMD_EXCH;
 const DLX_EXCH = constants.DLX_EXCH;

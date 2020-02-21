@@ -1,8 +1,8 @@
-const constants = require('./lib/constants');
+const constants = require('../../resources/constants');
 const PDF_QNAME = constants.PDF_QNAME;
 
 async function run() {
-	const rabbot = await require('./lib/resources/rabbitmq')();
+	const rabbot = await require('../../resources/rabbitmq')();
 	rabbot.handle({
 		queue: PDF_QNAME,
 		type: '#',

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const textHelper = require('./../lib/text');
 const dataHelper = require('./../lib/data');
 const templates = require('./../lib/templates');
@@ -14,10 +16,25 @@ module.exports = async function(msg) {
 		return;
 	}
 
-	if (!test) {
-		txt = await textHelper.PDFToText(file, true);
-	} else {
-		txt = fs.readFileSync(test).toString();
+	try {
+		if (!fs.existsSync(file)) {
+			console.error(`File ${file} not found.`);
+			return msg.reject();
+		}
+	} catch (err) {
+		console.error(err);
+		return msg.reject();
+	}
+
+	try {
+		if (!test) {
+			txt = await textHelper.PDFToText(file, true);
+		} else {
+			txt = fs.readFileSync(test).toString();
+		}
+	} catch (e) {
+		console.log(e);
+		return msg.reject();
 	}
 
 	if (file && DEBUG) {
@@ -28,7 +45,12 @@ module.exports = async function(msg) {
 
 	// fallback with Google Vision API
 	if (!type) {
-		gtxt = await textHelper.PDFToText(file, false);
+		try {
+			gtxt = await textHelper.PDFToText(file, false);
+		} catch (e) {
+			console.log(e);
+			return msg.reject();
+		}
 
 		if (DEBUG) console.log(gtxt);
 
