@@ -2,13 +2,14 @@ const fs = require('fs');
 
 const textHelper = require('./lib/text');
 const dataHelper = require('./lib/data');
+const templates = require('./lib/templates');
 
 async function main() {
 	const file = process.env.FILE || null;
 	const test = process.env.TEST || false; // provide url to txt file
 	const DEBUG = process.env.DEBUG || false;
 
-	let txt, type;
+	let txt, gtxt, type, result;
 
 	if (!file && !test) {
 		console.warning('No PDF input file given');
@@ -29,7 +30,7 @@ async function main() {
 
 	// fallback with Google Vision API
 	if (!type) {
-		const gtxt = await textHelper.PDFToText(file, false);
+		gtxt = await textHelper.PDFToText(file, false);
 
 		if (DEBUG) console.log(gtxt);
 
@@ -37,13 +38,20 @@ async function main() {
 		type = dataHelper.getTemplateType(gtxt);
 
 		// set input if first try gave no result
-		if (!txt.length) txt = gtxt;
+		if (!txt.length || txt.length < 10) txt = gtxt;
 	}
 
 	if (!type) {
 		console.error('No type found');
 	} else {
-		const result = dataHelper.getData(txt, type);
+		result = dataHelper.getData(txt, type);
+
+		// Use Google API as fallback
+		if ((!result || !result.articleNumber) && templates[type].forceGoogleAPI && !test) {
+			if (!gtxt) gtxt = await textHelper.PDFToText(file, false);
+			result = dataHelper.getData(gtxt, type);
+		}
+
 		const data = Object.assign(result || {}, { type });
 
 		console.log(JSON.stringify(data, null, 2));

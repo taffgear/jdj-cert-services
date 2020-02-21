@@ -4,7 +4,7 @@ const moment = require('moment');
 // Possible better regex: (?<=String1 : )(.*)(?= String2 )
 
 module.exports = {
-	'Laspartners Multiweld': {
+	'laspartners multiweld': {
 		text: {
 			articleNumber: {
 				regs: [
@@ -27,7 +27,7 @@ module.exports = {
 			}
 		}
 	},
-	LASPARTNERS: {
+	laspartners: {
 		text: {
 			articleNumber: {
 				regs: [ 'Machinenummer klant .(.*)Netspanning' ]
@@ -41,7 +41,7 @@ module.exports = {
 			}
 		}
 	},
-	'Onafhankelijk Controle Bureel': {
+	'onafhankelijk controle bureel': {
 		text: {
 			articleNumber: {
 				regs: [ 'Toestel/Install. ID:(.*)Plaats van onderzoek' ]
@@ -53,7 +53,7 @@ module.exports = {
 			}
 		}
 	},
-	WERKBON: {
+	werkbon: {
 		text: {
 			articleNumber: {
 				regs: [ '/(.*)/' ]
@@ -65,7 +65,7 @@ module.exports = {
 			}
 		}
 	},
-	'Technics Trading & Calibration': {
+	'technics trading & calibration': {
 		text: {
 			articleNumber: {
 				regs: [ 'Registratienummer:(.*)Naam klant' ]
@@ -77,8 +77,7 @@ module.exports = {
 			}
 		}
 	},
-	'Nemad Maritime Safety': {},
-	'Technisch Buro J. Verheij': {
+	'technisch buro j. verheij': {
 		text: {
 			articleNumber: {
 				regs: [ 'omschrijving(.*)identificatienummer' ]
@@ -92,7 +91,58 @@ module.exports = {
 			}
 		}
 	},
-	MasTwin: {},
-	'smit polyweb': {},
+	mastwin: {
+		text: {
+			articleNumber: {
+				regs: [ 'Bedrijfsnummer:(.*)Kenteken' ]
+			},
+			serialNumber: {
+				regs: [ 'Serienummer:(.*)Bedrijfsnummer' ]
+			},
+			date: {
+				regs: [ 'Bouwjaar :(.*)1 Documenten' ],
+				format: 'DD-M-YYYY'
+			}
+		}
+	},
+	'mas twin': {
+		text: {
+			articleNumber: {
+				regs: [ 'Bedrijfs nummer:(.*)Bouwjaar' ]
+			},
+			serialNumber: {
+				regs: [ 'Serienummer(.*)Merk' ]
+			},
+			date: {
+				regs: [ 'Inspectiedatum:(.*)Type heftruck' ],
+				format: 'DD-MM-YYYY'
+			}
+		}
+	},
+	'nemad maritime safety': {
+		text: {
+			articleNumber: {
+				regs: [ 'Ref. Nummer(.*)Name customer' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ 'Date Inspected:(.*)Next Service' ],
+				format: 'MM/YYYY'
+			}
+		}
+	},
+	'smit polyweb': {
+		forceGoogleAPI: true,
+		text: {
+			articleNumber: {
+				regs: [ 'Registratie nr \\(Distinguishing nr\\)(.*)Omschrijving' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ '\\(Date of delivery/inspection\\)(.*)Leverancier' ],
+				format: 'MM-YYYY'
+			}
+		}
+	},
 	BMWT: {}
 };

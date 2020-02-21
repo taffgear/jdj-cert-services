@@ -10,7 +10,7 @@ const articleNumberReg = /^([a-zA-Z0-9]){3,20}$/;
  */
 function getTemplateType(txt) {
 	// remove new lines from text
-	const str = txt.replace(/(\r\n|\n|\r)/gm, ' ');
+	const str = txt.replace(/(\r\n|\n|\r)/gm, ' ').toLocaleLowerCase();
 
 	return Object.keys(templates).reduce((acc, t) => {
 		if (acc) return acc;
@@ -40,6 +40,12 @@ const tryRegs = (k, regs, str) =>
 		// moment.js is smart enough to extract the date if a format is given.
 		if (k === 'date') {
 			acc = matches[1];
+			return acc;
+		}
+
+		if (k === 'articleNumber' && matches[1].length < 25) {
+			// remove spaces
+			acc = matches[1].replace(/\s/g, "").trim();
 			return acc;
 		}
 
