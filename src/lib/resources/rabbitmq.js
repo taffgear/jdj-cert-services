@@ -59,16 +59,7 @@ async function createRMQConn() {
 			]
 		});
 
-		console.log('Rabbit MQ connection succeeded');
-
-		rabbot.handle({
-			queue: PDF_QNAME,
-			type: '#',
-			autoNack: true,
-			context: null,
-			handler: require('../../handlers/pdf')
-		});
-		// rabbot.handle({ queue: CSV_QNAME, type: '#', autoNack: true, context: null, handler: insts.csv_handler_fn });
+		return rabbot;
 	} catch (e) {
 		console.log(e);
 		process.exit(1);
