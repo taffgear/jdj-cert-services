@@ -24,4 +24,4 @@ const single = async () => {
 	process.exit(0);
 };
 
-if (!folder && filename) single();
+if (!folder && (filename || test)) single();

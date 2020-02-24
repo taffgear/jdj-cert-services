@@ -1,0 +1,60 @@
+HARTWIG H
+instruments
+Customer:
+J. de Jonge Lease BV
+Date:
+29-Mar-2019
+Device
+Serial Number:
+359391
+53VGDTM080
+PS200
+Detector Type:
+Next Cal Due:
+Manufacturer:
+GMI
+Test Results
+Audible Alarm
+Visual Alarm
+PASS
+PASS
+Gas Applied
+Range
+Reading
+Calibrated To Result
+Zero Air
+% LEL
+PASS
+Zero Air
+% 02
+20.9
+PASS
+Zero Air
+PPM CO
+PASS
+Zero Air
+PPM H2S
+PASS
+Gas Applied
+Range
+Reading
+Calibrated To Result
+50%LEL Methane
+% LEL
+52
+50
+PASS
+18 %Vol Oxygen
+| % O2
+17.7
+PASS
+100 PPM CO
+PPM CO
+PASS
+25 PPM H2S
+PPM H2S
+PASS
+SIGNED:
+R. VELLEMA
+SERVICE TECHNICIAN
+Page 1 of 1

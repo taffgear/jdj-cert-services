@@ -56,7 +56,7 @@ module.exports = {
 	werkbon: {
 		text: {
 			articleNumber: {
-				regs: [ '/(.*)/' ]
+				regs: [ '/(.*)/', 'Machinenummer klant :(.*)Netspanning' ]
 			},
 			serialNumber: null,
 			date: {
@@ -70,7 +70,9 @@ module.exports = {
 			articleNumber: {
 				regs: [ 'Registratienummer:(.*)Naam klant' ]
 			},
-			serialNumber: null,
+			serialNumber: {
+				regs: [ 'Serienummer:(.*)Adres' ]
+			},
 			date: {
 				regs: [ 'Datum kalibratie:(.*)Datum afgifte' ],
 				format: 'D-MM-YYYY'
@@ -80,14 +82,17 @@ module.exports = {
 	'technisch buro j. verheij': {
 		text: {
 			articleNumber: {
-				regs: [ 'omschrijving(.*)identificatienummer' ]
+				regs: [
+					'omschrijving(.*)identificatienummer',
+					'Registratie merk \\(label\\):(.*)Registration mark'
+				]
 			},
 			serialNumber: {
 				regs: [ 'identificatienummer(.*)materiaal' ]
 			},
 			date: {
-				regs: [ 'Datum(.*)Meetrapport' ],
-				format: 'DD-MM-YYYY'
+				regs: [ 'Datum(.*)Meetrapport', 'Date last inspection(.*)Toepassing' ],
+				format: [ 'DD-MM-YYYY', 'MM-YYYY' ]
 			}
 		}
 	},
@@ -122,7 +127,11 @@ module.exports = {
 	'nemad maritime safety': {
 		text: {
 			articleNumber: {
-				regs: [ 'Ref. Nummer(.*)Name customer' ]
+				regs: [
+					'Certificate Nr.(.*)Ref. Nummer',
+					'Ref. Nummer(.*)Name customer',
+					'Certificate Nr.(.*)Name'
+				]
 			},
 			serialNumber: null,
 			date: {
@@ -135,12 +144,92 @@ module.exports = {
 		forceGoogleAPI: true,
 		text: {
 			articleNumber: {
-				regs: [ 'Registratie nr \\(Distinguishing nr\\)(.*)Omschrijving' ]
+				regs: [
+					'Certificaat nummer \\(Certificate number\\)(.*)Hijsmiddel\\(en\\)',
+					'Certificaat nummer \\(Certificate number\\)(.*)Hijsband\\(en\\)',
+					'Certificaat nummer \\(Certificate number\\)(.*)Spanmiddel\\(en\\)',
+					'Certificaat nummer \\(Certificate number\\)(.*)Valbeveiliging\\(en\\)',
+					'Registratie nr \\(Distinguishing nr\\)(.*)Omschrijving',
+					'Registratie nr \\(Distinguishing nr\\)(.*)Ondergetekende'
+				]
 			},
 			serialNumber: null,
 			date: {
-				regs: [ '\\(Date of delivery/inspection\\)(.*)Leverancier' ],
-				format: 'MM-YYYY'
+				regs: [
+					'Datum 1e beproeving \\(Date of 1st test\\)(.*)Leverings',
+					'Datum 1e beproeving \\(Date of 1st test\\)(.*)Toepassing',
+					'\\(Date of delivery/inspection\\)(.*)Leverancier',
+					'\\(Signature of competent person\\)(.*)Inspecteren'
+				],
+				format: [ 'DD-MM-YYYY', 'MM-YYYY' ]
+			}
+		}
+	},
+	albic: {
+		text: {
+			articleNumber: {
+				regs: [ 'ID-nummer(.*)Merk' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ 'Handtekening keurmeester:(.*)Naam keurmeester' ],
+				format: 'DD-MM-YYYY'
+			}
+		}
+	},
+	revin: {
+		forceGoogleAPI: true,
+		text: {
+			articleNumber: {
+				regs: [ 'Ref.klant(.*)/rep', '1A0001YDO2B(.*)Fabrikaat' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ 'Datum(.*)Ref.klant', 'Ref. Revin(.*)REVIN' ],
+				format: 'DD-MM-YYYY'
+			}
+		}
+	},
+	roca: {
+		text: {
+			articleNumber: {
+				regs: [ 'Barcode(.*)Productie' ]
+			},
+			serialNumber: null,
+			date: {
+				regs: [ 'Datum :(.*)Ron Campfens' ],
+				format: 'D MMMM YYYY'
+			}
+		}
+	},
+	'bw technologies': {
+		text: {
+			articleNumber: {
+				regs: [
+					'J. de Jonge Lease BV /(.*)Test Result',
+					'J. de Jonge flowsystems B.V. /(.*)Test Result'
+				]
+			},
+			serialNumber: {
+				regs: [ 'Device Serial Number:(.*)Next Cal Due' ]
+			},
+			date: {
+				regs: [ 'Calibration Test Certificate(.*)Device Serial Number' ],
+				format: 'YYYY-MM-DD HH:mm:ss'
+			}
+		}
+	},
+	hartwig: {
+		text: {
+			articleNumber: {
+				regs: [ '/ (.*)Date of Calibration' ]
+			},
+			serialNumber: {
+				regs: [ 'Serial Number :(.*) /' ]
+			},
+			date: {
+				regs: [ 'Date of Calibration :(.*)Calibration due' ],
+				format: 'DD-MM-YYYY'
 			}
 		}
 	},

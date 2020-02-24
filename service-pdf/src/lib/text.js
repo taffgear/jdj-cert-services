@@ -46,7 +46,7 @@ async function PDFToText(filePath, local = false) {
 		let txt;
 
 		for (const r of responses[0].responses[0].responses) {
-			txt += r.fullTextAnnotation.text;
+			if (r && r.fullTextAnnotation && r.fullTextAnnotation.text) txt += r.fullTextAnnotation.text;
 		}
 		return txt;
 	} catch (e) {

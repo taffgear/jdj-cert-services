@@ -1,6 +1,10 @@
 const moment = require('moment');
+const isArray = require('lodash/isArray');
 const templates = require('./templates');
 const articleNumberReg = /^([a-zA-Z0-9]){3,20}$/;
+const dateFormatSeperators = [ '-', '/', '.' ];
+
+moment.locale('nl');
 
 /**
  * 
@@ -22,6 +26,25 @@ function getTemplateType(txt) {
 	}, null);
 }
 
+const extractDate = (str, formats) =>
+	formats.reduce((list, format) => {
+		if (list) return list;
+
+		// if formats do not match, skip
+		let skip = false;
+		dateFormatSeperators.forEach((sep) => {
+			if (format.indexOf(sep) > 0 && str.indexOf(sep) < 0) skip = true;
+		});
+
+		if (skip) return list;
+
+		const m = moment(str.trim(), format);
+
+		// if we have a valid date, format it
+		if (m.isValid()) list = m.format('YYYY-MM-DD');
+		return list;
+	}, null);
+
 /**
  * 
  * Extract specific field from document text using template field positions
@@ -30,8 +53,8 @@ function getTemplateType(txt) {
  * @param {*Array} regs 
  * @param {*String} str 
  */
-const tryRegs = (k, regs, str) =>
-	regs.reduce((acc, re) => {
+const tryRegs = (k, cnf, str) =>
+	cnf.regs.reduce((acc, re) => {
 		if (acc) return acc;
 
 		const matches = str.match(re);
@@ -40,13 +63,35 @@ const tryRegs = (k, regs, str) =>
 
 		// if we have a result, even if there is a lot of text
 		// moment.js is smart enough to extract the date if a format is given.
+		// but we still have to validate it.
+
 		if (k === 'date') {
-			acc = matches[1];
+			let date;
+			const dateFormats = isArray(cnf.format) ? cnf.format : [ cnf.format ];
+
+			// result contains more then just our date
+			if (matches[1].length > 16) {
+				// split on space and try each part
+				const parts = matches[1].split(' ');
+
+				date = parts.reduce((list, d) => {
+					if (list) return list;
+					list = extractDate(d, dateFormats);
+					return list;
+				}, null);
+			} else {
+				date = extractDate(matches[1], dateFormats);
+			}
+
+			if (date) acc = date;
+
 			return acc;
 		}
 
 		if (k === 'articleNumber' && matches[1].length < 25) {
 			// remove spaces
+
+			// TODO: test regex!!!
 			acc = matches[1].replace(/\s/g, '').trim();
 			return acc;
 		}
@@ -60,7 +105,7 @@ const tryRegs = (k, regs, str) =>
 		}
 
 		// try regex to find article number
-		const parts = matches[1].split(' ');
+		const parts = matches[1].split(' ').filter((v) => v !== '');
 		if (!parts || !parts.length) return acc;
 
 		// use first part of string
@@ -98,17 +143,11 @@ function getData(txt, type) {
 		if (!cnf || !cnf.regs) return acc;
 
 		// try each field position set (text between String X and String Y)
-		const result = tryRegs(k, cnf.regs, str);
+		const result = tryRegs(k, cnf, str);
 
 		if (!result) return acc;
 
 		acc[k] = result;
-
-		if (k !== 'date') return acc;
-
-		// parse date and format
-		const m = moment(acc[k], cnf.format);
-		if (m.isValid()) acc[k] = m.format('YYYY-MM-DD');
 
 		return acc;
 	}, {});
