@@ -1,10 +1,52 @@
+const path = require('path');
 const moment = require('moment');
-const isArray = require('lodash/isArray');
+const { isArray, union } = require('lodash');
+const nconf = require('nconf');
+const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../config.json') });
+
 const templates = require('./templates');
 const articleNumberReg = /^([a-zA-Z0-9]){3,20}$/;
 const dateFormatSeperators = [ '-', '/', '.' ];
+const DEFAULT_CERTIFICATE_IDENTIFIERS = [
+	'certificaat',
+	'onderhoudsrapport',
+	'certificate',
+	'inspectierapport',
+	'meetrapport',
+	'checklist'
+];
+const CERTIFICATE_BLACK_LIST = [ 'certificaat.lease@jdejonge.nl' ];
+const certificateIdentifiers = union(DEFAULT_CERTIFICATE_IDENTIFIERS, cnf.get('certificateIdentifiers'));
+const certificateBlackList = union(CERTIFICATE_BLACK_LIST, cnf.get('certificateBlackList'));
 
 moment.locale('nl');
+
+/**
+ * 
+ * Find template type using list of templates
+ * 
+ * @param {String} txt 
+ */
+function isCertificate(txt) {
+	if (!txt) return null;
+
+	// remove new lines from text
+	const str = txt.replace(/(\r\n|\n|\r)/gm, ' ').toLocaleLowerCase();
+
+	const isCert = certificateIdentifiers.reduce((acc, i) => {
+		if (acc) return acc;
+		if (str.indexOf(i) >= 0) acc = true;
+		return acc;
+	}, false);
+
+	if (!isCert) return false;
+
+	return certificateBlackList.reduce((acc, i) => {
+		if (!acc) return acc;
+		if (str.indexOf(i) >= 0) acc = false;
+		return acc;
+	}, true);
+}
 
 /**
  * 
@@ -155,5 +197,6 @@ function getData(txt, type) {
 
 module.exports = {
 	getTemplateType,
-	getData
+	getData,
+	isCertificate
 };

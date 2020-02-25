@@ -159,7 +159,8 @@ module.exports = {
 					'Datum 1e beproeving \\(Date of 1st test\\)(.*)Leverings',
 					'Datum 1e beproeving \\(Date of 1st test\\)(.*)Toepassing',
 					'\\(Date of delivery/inspection\\)(.*)Leverancier',
-					'\\(Signature of competent person\\)(.*)Inspecteren'
+					'\\(Signature of competent person\\)(.*)Inspecteren',
+					'\\(Signature of competent person\\)(.*)Smit Polyweb'
 				],
 				format: [ 'DD-MM-YYYY', 'MM-YYYY' ]
 			}

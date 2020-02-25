@@ -85,6 +85,14 @@ module.exports = async function(msg, rejectable = true) {
 		if (!txt.length || txt.length < 10) txt = gtxt;
 	}
 
+	// check if file is a certificate
+	const isCertificate = dataHelper.isCertificate(txt);
+
+	if (!isCertificate) {
+		console.error(`Skipping ${filename} - no certificate identifier found.`);
+		return rejectable ? msg.reject() : null;
+	}
+
 	if (!type) {
 		console.error(`No type found for file ${filename}`);
 		return rejectable ? msg.reject() : null;
@@ -92,7 +100,7 @@ module.exports = async function(msg, rejectable = true) {
 		result = dataHelper.getData(txt, type);
 
 		// Use Google API as fallback
-		if ((!result || !result.articleNumber) && templates[type].forceGoogleAPI && !test) {
+		if ((!result || !result.articleNumber) && templates[type].forceGoogleAPI && !test && !gtxt) {
 			if (!gtxt) gtxt = await textHelper.PDFToText(file, false);
 
 			if (DEBUG) console.log(`Google Vision API Output (Fallback): \n ${gtxt}`);
