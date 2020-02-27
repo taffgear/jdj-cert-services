@@ -53,18 +53,18 @@ module.exports = {
 			}
 		}
 	},
-	werkbon: {
-		text: {
-			articleNumber: {
-				regs: [ '/(.*)/', 'Machinenummer klant :(.*)Netspanning' ]
-			},
-			serialNumber: null,
-			date: {
-				regs: [ 'Datum : (.*)Werkbonnummer' ],
-				format: 'DD-MM-YYYY'
-			}
-		}
-	},
+	// werkbon: {
+	// 	text: {
+	// 		articleNumber: {
+	// 			regs: [ '/(.*)/', 'Machinenummer klant :(.*)Netspanning' ]
+	// 		},
+	// 		serialNumber: null,
+	// 		date: {
+	// 			regs: [ 'Datum : (.*)Werkbonnummer' ],
+	// 			format: 'DD-MM-YYYY'
+	// 		}
+	// 	}
+	// },
 	'technics trading & calibration': {
 		text: {
 			articleNumber: {

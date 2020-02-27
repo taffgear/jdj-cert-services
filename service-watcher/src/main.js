@@ -5,10 +5,6 @@ const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + 
 
 const constants = require('../../resources/constants');
 
-const CMD_EXCH = constants.CMD_EXCH;
-const PDF_BIND_KEY = constants.PDF_BIND_KEY;
-const AMQ_INSTANCE = constants.AMQ_INSTANCE;
-
 const DEFAULT_WATCHER_SETTINGS = {
 	persistent: true,
 	ignoreInitial: true,
@@ -25,7 +21,7 @@ const DEFAULT_WATCHER_SETTINGS = {
 };
 
 async function run() {
-	rabbot = await require('../../resources/rabbitmq')();
+	rabbot = await require('../../resources/rabbitmq')(require('./lib/rmq'));
 
 	const watcher = chokidar.watch(
 		cnf.get('watchdir') + '.',
@@ -48,12 +44,19 @@ async function run() {
 	});
 	watcher.on('ready', () =>
 		watcher.on('add', (path) => {
+			watcher.unwatch(path);
+
 			if (/.*[^.pdf,PDF]$/.test(path)) return false;
 
+			console.log(path);
+
 			rabbot.publish(
-				CMD_EXCH,
-				{ routingKey: PDF_BIND_KEY, body: { filename: path, test: false, debug: false } },
-				[ AMQ_INSTANCE ]
+				constants.CMD_EXCH,
+				{
+					routingKey: constants.PDF_READ_BIND_KEY,
+					body: { filename: path, test: false, debug: false }
+				},
+				[ constants.AMQ_INSTANCE ]
 			);
 		})
 	);

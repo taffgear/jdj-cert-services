@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const rp = require('request-promise');
+const ObjectsToCsv = require('objects-to-csv');
+const moment = require('moment');
 
 const nconf = require('nconf');
 const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../config.json') });
@@ -8,22 +9,18 @@ const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../
 const textHelper = require('./../lib/text');
 const dataHelper = require('./../lib/data');
 const templates = require('./../lib/templates');
+const csvOutput = typeof cnf.get('CSV') !== 'undefined' && cnf.get('CSV') === 'true' ? true : false;
+const results = [];
+const resultDefaults = { articleNumber: '', serialNumber: '', date: '', type: '' };
+const csvOutputDir = `${cnf.get('csvOutputDir') || '/tmp'}/pdf-batch-output-${moment().format(
+	'YYYY-MM-DD HH:mm:ss'
+)}.csv`;
 
-async function findArticleByNumber(n) {
-	let result;
+const constants = require('../../../resources/constants');
 
-	try {
-		result = await rp({
-			uri: cnf.get('api:uri') + `/stock/find/${n}`,
-			headers: { Authorization: 'Bearer ' + cnf.get('api:jwt_token') },
-			json: true
-		});
-	} catch (e) {
-		console.error(e.message);
-		return false;
-	}
-
-	return result;
+async function addToCSV() {
+	const csv = new ObjectsToCsv(results);
+	await csv.toDisk(csvOutputDir);
 }
 
 module.exports = async function(msg, rejectable = true) {
@@ -58,6 +55,12 @@ module.exports = async function(msg, rejectable = true) {
 		}
 	} catch (e) {
 		console.log(e);
+
+		if (csvOutput) {
+			results.push(Object.assign({ filename, status: 'ERROR', reason: e.message }, resultDefaults));
+			await addToCSV();
+		}
+
 		return rejectable ? msg.reject() : null;
 	}
 
@@ -73,6 +76,12 @@ module.exports = async function(msg, rejectable = true) {
 			gtxt = await textHelper.PDFToText(file, false);
 		} catch (e) {
 			console.log(e);
+
+			if (csvOutput) {
+				results.push(Object.assign({ filename, status: 'ERROR', reason: e.message }, resultDefaults));
+				await addToCSV();
+			}
+
 			return rejectable ? msg.reject() : null;
 		}
 
@@ -90,11 +99,33 @@ module.exports = async function(msg, rejectable = true) {
 
 	if (!isCertificate) {
 		console.error(`Skipping ${filename} - no certificate identifier found.`);
+
+		if (csvOutput) {
+			results.push(
+				Object.assign(
+					{ filename, status: 'SKIPPING', reason: 'no certificate identifier found' },
+					resultDefaults
+				)
+			);
+			await addToCSV();
+		}
+
 		return rejectable ? msg.reject() : null;
 	}
 
 	if (!type) {
 		console.error(`No type found for file ${filename}`);
+
+		if (csvOutput) {
+			results.push(
+				Object.assign(
+					{ filename, status: 'SKIPPING', reason: 'no type/supplier found' },
+					resultDefaults
+				)
+			);
+			await addToCSV();
+		}
+
 		return rejectable ? msg.reject() : null;
 	} else {
 		result = dataHelper.getData(txt, type);
@@ -108,14 +139,34 @@ module.exports = async function(msg, rejectable = true) {
 			result = dataHelper.getData(gtxt, type);
 		}
 
-		const data = Object.assign(result || {}, { type, filename });
+		const data = Object.assign(result || {}, { type, filename, filepath: file || test });
+
+		if (csvOutput) {
+			results.push({
+				filename,
+				status: data.articleNumber ? 'OK' : 'NOT FOUND',
+				reason: '',
+				articleNumber: data.articleNumber || '',
+				serialNumber: data.serialNumber || '',
+				date: data.date || '',
+				type
+			});
+
+			await addToCSV();
+		}
+
+		if (data && data.articleNumber) {
+			this.rabbot.publish(
+				constants.CMD_EXCH,
+				{
+					routingKey: constants.PDF_MATCH_BIND_KEY,
+					body: data
+				},
+				[ constants.AMQ_INSTANCE ]
+			);
+		}
 
 		console.log(JSON.stringify(data, null, 2));
-
-		// if (data && data.articleNumber) {
-		// 	const article = await findArticleByNumber(data.articleNumber);
-		// 	console.log(article);
-		// }
 
 		if (rejectable) msg.ack();
 	}

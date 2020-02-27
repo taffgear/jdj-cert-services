@@ -4,11 +4,11 @@ async function run() {
 	const rabbot = await require('../../resources/rabbitmq')(require('./lib/rmq'));
 
 	rabbot.handle({
-		queue: constants.PDF_QNAME,
+		queue: constants.PDF_MATCH_QNAME,
 		type: '#',
 		autoNack: true,
 		context: null,
-		handler: require('./handlers/pdf').bind({ rabbot })
+		handler: require('./handlers/matcher').bind({ rabbot })
 	});
 }
 
