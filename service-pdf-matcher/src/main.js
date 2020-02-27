@@ -10,6 +10,8 @@ async function run() {
 		context: null,
 		handler: require('./handlers/matcher').bind({ rabbot })
 	});
+
+	console.log('service-pdf-matcher running...');
 }
 
 run();

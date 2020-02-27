@@ -39,6 +39,8 @@ async function run() {
 		})
 	);
 
+	console.log('service-pdf-watcher running...');
+
 	watcher.on('error', (e) => {
 		console.log('Watcher Error: ' + e.message);
 	});

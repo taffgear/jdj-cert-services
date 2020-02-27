@@ -10,6 +10,8 @@ async function run() {
 		context: null,
 		handler: require('./handlers/pdf').bind({ rabbot })
 	});
+
+	console.log('service-pdf-reader running...');
 }
 
 run();
