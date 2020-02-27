@@ -1,0 +1,108 @@
+WERKBON
+LASPARTNERS
+MULTIWELD
+Datum
+Werkbonnummer
+: 13-06-2019
+: 19052804
+: REP5540/09LMMI0025/RL
+Ordernr klant
+Debiteur
+Contactpersonen
+Debiteurnummer
+: 82509
+Oproeper
+Bedrijfsnaam
+: J. de Jonge Lease BV
+: Dhr. R. Langerak
++31 10 248 58 00/06-23277298
+: Dhr. R. Langerak
++31 10 248 58 00/06-23277298
+Persoon ter plaatse
+Adres
+: Kon. Wilhelminahaven ZZ 18
+(Haven 648)
+3134 KG Vlaardingen
+NL
+Bezoekadres
+Opdracht
+Bedrijfsnaam
+: J. de Jonge Lease BV
+: Storing - op TD
+Opdrachttype
+Uit te voeren werk
+Adres
+: Kon. Wilhelminahaven ZZ 18
+3134 KG Vlaardingen
+: 1 x Lincoln Powerwave 455M
+(09LMMI0025).
+- Geheel nazien.
+Installatie
+Machine
+Installatie
+: Keuren / Onderhoud en Valideren
+Serienummer
+Installatiedatum
+Installatietype
+: Keuren/Onderhouden en Valideren
+: Vlaardingen J. de Jonge
+Machinenummer
+Merk | Type
+Installatiedatum
+Locatie
+Locatie
+Uitgevoerde werkzaamheden
+1 x reparatie Lincoln Powerwave 455M (09LMMI0025).
+- Reparatie koeler, ventilator vervangen.
+Geheel nagekeken en mee proef gelast.
+Verbruikte materialen
+Aantal Artikelnr
+Omschrijving
+Prijs
+Bedrag
+2,50 MD99.00.00004
+1,00 MD99.00.00099
+1,00 MD99.00.00999
+1,00 VERZ.16
+Arbeidsloon
+Diverse klein materiaal
+W2S130-MB03-01 Fan, 150x55mm, 230V AC
+Retourneren reparatie lasmachine
+€ 68,50
+€ 8,25
+€ 116,15
+€ 35,00
+€ 171,25
+€ 8,25
+€ 116,15
+€ 35,00
+Totaal
+€ 330,65
+Handtekening
+SPECIFICATIES
+LASPARTNERS
+LJ MULTIWELD
+Werkbonnummer
+: 19052804
+= Behandeld
+•
+•
+NEN50504 keuring
+NEN3140 keuring
+Keuring
+Machine
+Serienummer
+Merk
+Productgroep
+Keuringen
+Machinenr
+09LMMI0025
+Productlijn
+Mig/Mag
+Producttype
+Powerwave 455M/STT
+Locatie
+Loods 3
+onbekend
+Lincoln Electric
+Lasmachines

@@ -1,0 +1,129 @@
+MasTwin
+Werfdijk 2
+3195 HV Pernis
+service@mastwin.nl
+Inspectierapport Compressor
+Eigenaar: J. de Jonge lease
+Type:
+7/31E
+Serienummer: 321608
+Bedrijfsnummer: 15MCOMO4
+Kenteken:
+Inspectiedatum:
+Naam inspecteur :
+Merk :
+Bouwjaar :
+29-1-2020
+J. Goudswaard
+Doosan
+2011
+1
+2
+3
+4
+2
+3
+х
+X
+х
+1 Documenten
+1.1 EG - verklaring
+1.2 Schema's
+1.3 Onderdelenboek
+1.4 Bediening instructie boek
+2 Opschriften en markeringen
+1.1 Typeplaat
+2.1 Bedienings instructies
+2.2 CE markering
+2.3 Gewicht
+2.4 Soort brandstof
+2.5 LWA
+2.6 Veiligheidsmarkeringen
+2.7
+5 Compressor
+5.1 Air end
+5.2 Separatorfilter
+5.3 Compressor oliefilter
+5.4 Luchtkoeler
+5.5 Lekkages
+5.6 Conditie compressorolie
+5.7 Condenswater aftap
+XXXXXXX
+X
+X
+XXXXXX
+Х
+X
+х
+X
+6 Veiligheid en beveiligingen
+6.1 Werking overstort ventiel
+6.2 Druk afstelling
+6.3 Drukvat
+6.4 Slangen/koppelingen beveiligd
+6.5 Afscherming draaiende delen
+6.4 Afscherming hete delen
+6.6
+Х
+6.7
+6.8
+х
+3 Bedieningsplaats
+3.1 Instrumenten en meters
+3.2 Contactslotfunctie
+3.3 Startbeveiliging
+3,4 Noodstop
+3.5 Noodbediening
+3.6 Bedieningsorganen
+3.7 Functie en keuzeschakelaars
+3.8 Werkverlichting
+3.9 Opschriften en aanduidingen
+3.10
+3.11
+X
+7 Onderstel
+7.1 Banden, wielen en assen
+7.2 Handrem
+7.3 Oplooprem
+7.4 Trekkop
+7.5 Verlichting
+7.6 Reflectoren
+7.7 Conditie chassis
+7.8 Breekkabel/hulpkoppeling
+7.9
+7.10
+X
+Х
+Х
+Х
+4 Staat van onderhoud
+4.1 Plaat en schilderwerk
+4.2 Oliepeilen
+4.3 Dieselmotor
+4.4 Koelsysteem
+4.5 Compressor
+4.6 Lekkages
+4.7 Uitlaatsysteem
+4.8 Brandstof systeem
+5.6
+Algemeen
+X
+8
+8.1
+8.2
+8.3
+8.2
+8.3
+X
+1 = Opgeslagen bij TD
+2 = In orde
+Bevindingen
+3 = Niet in orde (zie opmerkingen/bijlage)
+4 = Niet van toepassing
+Aanbevelingen
+Goedgekeurd/afgekeurdt
+stickernummer: 2020064
+Getekend voor gezien
+Handtekening inspecteur
+Handtekening klant
+06/04/2017/Rev1.0

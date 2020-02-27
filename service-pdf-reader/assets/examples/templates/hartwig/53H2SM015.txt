@@ -1,0 +1,28 @@
+HARTWIG H
+instruments
+Instrument Calibration Certificate
+Model
+: ToxiRae 3
+Customer
+: J. de Jonge flowsystems B.V.
+Serial Number : G011115873 / 53H2SM015
+Date of Calibration : 28-03-2019
+Calibration due : 24-09-2019
+Calibration Tank
+:CG-Q58-5
+H2S
+Due
+GAS Date SpanLOW HIGHTWA STEL
+H2S 180days 25 ppm 5ppm
+3.2ppm
+25 ppm
+1.6 ppm
+5ppm
+5ppm
+Signature Controller: P. van der Jagt
+certificate
+This instrument has been factory inspected, tested and calibrated
+in accordance with the and requirements of our registered Quality System ISO 9001,
+Operating Standards and Sales' Agreements.
+All calibration gases are traceable to a known national standard.
+Refer to your product user manual to determine recommended calibration frequency.

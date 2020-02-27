@@ -1,9 +1,40 @@
+const fs = require('fs-extra');
 const rp = require('request-promise');
 const nconf = require('nconf');
 const moment = require('moment');
 const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + '/../../../config.json') });
 
 const headers = { Authorization: 'Bearer ' + cnf.get('api:jwt_token') };
+const constants = require('../../../resources/constants');
+
+async function copyPDFToFolder(article, original) {
+	const filePath = `${cnf.get('pdfDir')}/${article.PGROUP}/${article.GRPCODE}`;
+	const filename = `${filePath}/${article.ITEMNO}.pdf`;
+
+	try {
+		if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true });
+		fs.copySync(original, filename);
+
+		return filename;
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
+
+function publishToWrapupQueue(body, status, reason) {
+	this.rabbot.publish(
+		constants.CMD_EXCH,
+		{
+			routingKey: constants.PDF_WRAPUP_BIND_KEY,
+			body: Object.assign(body, {
+				success: status,
+				reason
+			})
+		},
+		[ constants.AMQ_INSTANCE ]
+	);
+}
 
 const genUpdateStockItemBody = (lastser, serno, status, itemno) => ({
 	lastser: lastser,
@@ -30,8 +61,6 @@ const genCreateContDocBody = (itemno, filePath, lastser) => ({
 });
 
 async function createContdoc(body) {
-	console.log(body);
-
 	try {
 		const result = await rp({
 			method: 'POST',
@@ -51,8 +80,6 @@ async function createContdoc(body) {
 }
 
 async function updateStockItem(body) {
-	console.log(body);
-
 	try {
 		const result = await rp({
 			method: 'PUT',
@@ -106,20 +133,14 @@ async function findArticleByNumber(n) {
 }
 
 module.exports = async function(msg, rejectable = true) {
-	console.log(msg.body);
-
 	const article = await findArticleByNumber(msg.body.articleNumber);
 
 	if (!article) {
-		// TODO: publish message to last process
+		publishToWrapupQueue.call(this, msg.body, false, 'not_found');
 		return rejectable ? msg.ack() : null;
 	}
 
-	console.log(article);
-
 	const contDoc = await findContdocItem(msg.body.articleNumber);
-
-	console.log(`ContDoc: ${!!contDoc}`);
 
 	if (contDoc && contDoc.SID && contDoc.SID.length && msg.body.date) {
 		const m = moment(contDoc.SID);
@@ -129,10 +150,9 @@ module.exports = async function(msg, rejectable = true) {
 			(moment(m.format('YYYY-MM-DD')).isSameOrAfter(msg.body.date) ||
 				m.format('YYYY-MM-DD') === msg.body.date)
 		) {
-			// TODO: publish message to last process
+			publishToWrapupQueue.call(this, msg.body, false, 'duplicate_contdoc');
 			console.error(`PDF ${msg.body.filepath} is al verwerkt.`);
 			return rejectable ? msg.ack() : null;
-			// throw new Error('PDF ' + path + ' is al verwerkt.');
 		}
 	}
 
@@ -147,23 +167,33 @@ module.exports = async function(msg, rejectable = true) {
 		)
 	);
 
-	console.log(`Result update stock: ${result}`);
-
 	if (!result) {
-		// TODO: publish message to last process
+		publishToWrapupQueue.call(this, msg.body, false, 'update_stock_error');
 		return rejectable ? msg.ack() : null;
 	}
+
+	const copiedPath = await copyPDFToFolder(article, msg.body.filepath);
+
+	if (!copiedPath) {
+		publishToWrapupQueue.call(this, msg.body, false, 'copy_file_failed');
+		return rejectable ? msg.ack() : null;
+	}
+
+	const winPath = `${cnf.get('pdfDirWin')}\\${article.PGROUP}\\${article.GRPCODE}\\${article.ITEMNO}.pdf`;
 
 	result = await createContdoc(
-		genCreateContDocBody(article.ITEMNO, msg.body.filename, msg.body.date || article['LASTSER#3'])
+		genCreateContDocBody(article.ITEMNO, winPath, msg.body.date || article['LASTSER#3'])
 	);
 
-	console.log(`Result create contdoc: ${result}`);
-
 	if (!result) {
-		// TODO: publish message to last process
+		// remove copied file
+		if (fs.existsSync(copiedPath)) fs.unlinkSync(copiedPath);
+
+		publishToWrapupQueue.call(this, msg.body, false, 'create_contdoc_error');
 		return rejectable ? msg.ack() : null;
 	}
+
+	publishToWrapupQueue.call(this, Object.assign(msg.body, { copiedPath }), true, null);
 
 	if (rejectable) msg.ack();
 };
