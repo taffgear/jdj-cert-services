@@ -1,0 +1,10 @@
+{
+	"name": "csv-file-generator",
+	"script": "src/main.js",
+	"instances": 2,
+	"autorestart": true,
+	"watch": false,
+	"max_restarts": 20,
+	"max_memory_restart": "2G",
+	"log_date_format": "YYYY-MM-DD HH:mm Z"
+}

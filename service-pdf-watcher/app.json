@@ -1,0 +1,10 @@
+{
+	"name": "pdf-watcher",
+	"script": "src/main.js",
+	"instances": 1,
+	"autorestart": true,
+	"watch": false,
+	"max_restarts": 20,
+	"max_memory_restart": "2G",
+	"log_date_format": "YYYY-MM-DD HH:mm Z"
+}
