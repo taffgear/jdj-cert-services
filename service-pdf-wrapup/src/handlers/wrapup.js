@@ -10,7 +10,7 @@ const redis = new Redis();
 
 async function copyPDFToFailedFolder(filepath) {
 	try {
-		fs.copySync(filepath, `${cnf.get('pdfDirFailed')}${path.parse(filepath).base}`);
+		fs.copySync(filepath, `${cnf.get('pdfDirFailed')}/${path.parse(filepath).base}`);
 	} catch (e) {
 		console.log(e);
 		return false;
@@ -76,6 +76,15 @@ module.exports = async function(msg, rejectable = true) {
 			case 'copy_file_failed':
 				message = `Het bestand ${msg.body.filename} met artikelnummer ${msg.body
 					.articleNumber} kon niet worden gekopieerd.`;
+				break;
+
+			case 'csv_item_lookup_failed':
+				message = `Het CSV bestand ${msg.body.filename} heeft geen matches opgeleverd.`;
+				break;
+
+			case 'csv_item_not_found':
+				message = `Het artikel met nummer ${msg.body.articleNumber} uit het CSV bestand ${msg.body
+					.filename} is niet gevonden.`;
 				break;
 
 			default:

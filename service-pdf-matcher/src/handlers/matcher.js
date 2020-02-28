@@ -152,13 +152,8 @@ module.exports = async function(msg, rejectable = true) {
 	if (contDoc && contDoc.SID && contDoc.SID.length && msg.body.date) {
 		const m = moment(contDoc.SID);
 
-		if (
-			m.isValid() &&
-			(moment(m.format('YYYY-MM-DD')).isSameOrAfter(msg.body.date) ||
-				m.format('YYYY-MM-DD') === msg.body.date)
-		) {
+		if (m.isValid() && moment(m.format('YYYY-MM-DD')).isSameOrAfter(msg.body.date)) {
 			publishToWrapupQueue.call(this, msg.body, false, 'duplicate_contdoc');
-			console.error(`PDF ${msg.body.filepath} is al verwerkt.`);
 			return rejectable ? msg.ack() : null;
 		}
 	}
