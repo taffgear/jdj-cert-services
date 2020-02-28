@@ -216,6 +216,13 @@ module.exports = async function(msg, rejectable = true) {
 				},
 				[ constants.AMQ_INSTANCE ]
 			);
+		} else {
+			publishToWrapupQueue.call(
+				this,
+				Object.assign(msg.body, { filepath: file || test, filename, type }),
+				false,
+				'no_article_number_found'
+			);
 		}
 
 		console.log(JSON.stringify(data, null, 2));

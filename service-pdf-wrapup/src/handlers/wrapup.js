@@ -22,7 +22,7 @@ function notifyClients(type, msg) {
 }
 
 function buildRedisKey(id, category) {
-	return 'jdj:logs:certs:' + category + ':' + id;
+	return 'jdj:logs:' + category + ':' + id;
 }
 
 module.exports = async function(msg, rejectable = true) {
@@ -43,9 +43,48 @@ module.exports = async function(msg, rejectable = true) {
 		};
 
 		await redis.set(buildRedisKey(logMsg.id, 'success'), JSON.stringify(logMsg));
-		notifyClients.call(this, 'stockItem', msg.body);
+		notifyClients.call(this, 'stockItem', msg.body.article);
 	} else {
-		logMsg = { msg: msg.body.reason, ts: moment().format('x'), id: uuid() };
+		let message;
+
+		switch (msg.body.reason) {
+			case 'not_found':
+				message = `Geen artikel gevonden met nummer ${msg.body.articleNumber} uit het bestand ${msg.body
+					.filename}`;
+				break;
+
+			case 'no_identifier_found':
+				message = `Het bestand ${msg.body
+					.filename} is niet gekoppeld omdat het niet is herkend als certificaat bestand.`;
+				break;
+
+			case 'no_type_found':
+				message = `Het bestand ${msg.body
+					.filename} is niet gekoppeld omdat er geen template gevonden is voor dit bestand.`;
+				break;
+
+			case 'no_article_number_found':
+				message = `Het bestand ${msg.body
+					.filename} is niet gekoppeld omdat er geen artikelnummer uit het bestand gehaald kon worden.`;
+				break;
+
+			case 'duplicate_contdoc':
+				message = `Het bestand ${msg.body.filename} is reeds gekoppeld aan artikel ${msg.body
+					.articleNumber} met keuringsdatum ${msg.body.date}`;
+				break;
+
+			case 'copy_file_failed':
+				message = `Het bestand ${msg.body.filename} met artikelnummer ${msg.body
+					.articleNumber} kon niet worden gekopieerd.`;
+				break;
+
+			default:
+				message = `Er is een onbekende fout opgetreden tijdens het verwerken van bestand: ${msg.body
+					.filepath}`;
+				break;
+		}
+
+		logMsg = { msg: message, ts: moment().format('x'), id: uuid() };
 		await redis.set(buildRedisKey(logMsg.id, 'failed'), JSON.stringify(logMsg));
 	}
 

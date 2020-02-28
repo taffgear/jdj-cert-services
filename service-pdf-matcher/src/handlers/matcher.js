@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const rp = require('request-promise');
 const nconf = require('nconf');
 const moment = require('moment');
+const mkdirp = require('mkdirp');
 const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + '/../../../config.json') });
 
 const headers = { Authorization: 'Bearer ' + cnf.get('api:jwt_token') };
@@ -9,11 +10,17 @@ const constants = require('../../../resources/constants');
 
 async function copyPDFToFolder(article, original) {
 	const filePath = `${cnf.get('pdfDir')}/${article.PGROUP}/${article.GRPCODE}`;
-	const filename = `${filePath}/${article.ITEMNO}.pdf`;
+	let filename = `${article.ITEMNO}.pdf`;
 
 	try {
-		if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true });
-		fs.copySync(original, filename);
+		if (!fs.existsSync(filePath)) mkdirp.sync(filePath);
+
+		if (fs.existsSync(`${filePath}/${filename}`)) {
+			// rename file with current datetime string
+			filename = `${article.ITEMNO}_${moment().format('YYYYMMDDHHmmssSSS')}.pdf`;
+		}
+
+		fs.copySync(original, `${filePath}/${filename}`);
 
 		return filename;
 	} catch (e) {
@@ -172,14 +179,15 @@ module.exports = async function(msg, rejectable = true) {
 		return rejectable ? msg.ack() : null;
 	}
 
-	const copiedPath = await copyPDFToFolder(article, msg.body.filepath);
+	const filename = await copyPDFToFolder(article, msg.body.filepath);
+	const fullPath = `${cnf.get('pdfDir')}/${article.PGROUP}/${article.GRPCODE}/${filename}`;
 
-	if (!copiedPath) {
+	if (!filename) {
 		publishToWrapupQueue.call(this, msg.body, false, 'copy_file_failed');
 		return rejectable ? msg.ack() : null;
 	}
 
-	const winPath = `${cnf.get('pdfDirWin')}\\${article.PGROUP}\\${article.GRPCODE}\\${article.ITEMNO}.pdf`;
+	const winPath = `${cnf.get('pdfDirWin')}\\${article.PGROUP}\\${article.GRPCODE}\\${filename}`;
 
 	result = await createContdoc(
 		genCreateContDocBody(article.ITEMNO, winPath, msg.body.date || article['LASTSER#3'])
@@ -187,13 +195,13 @@ module.exports = async function(msg, rejectable = true) {
 
 	if (!result) {
 		// remove copied file
-		if (fs.existsSync(copiedPath)) fs.unlinkSync(copiedPath);
+		if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
 
 		publishToWrapupQueue.call(this, msg.body, false, 'create_contdoc_error');
 		return rejectable ? msg.ack() : null;
 	}
 
-	publishToWrapupQueue.call(this, Object.assign(msg.body, { copiedPath }), true, null);
+	publishToWrapupQueue.call(this, Object.assign(msg.body, { fullPath, article }), true, null);
 
 	if (rejectable) msg.ack();
 };
