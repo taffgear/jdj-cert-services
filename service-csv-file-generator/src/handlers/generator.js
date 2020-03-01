@@ -5,7 +5,7 @@ const wkhtmltopdf = require('wkhtmltopdf');
 const nconf = require('nconf');
 const mkdirp = require('mkdirp');
 const rp = require('request-promise');
-const Xvfb = require('xvfb');
+// const Xvfb = require('xvfb');
 
 const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + '/../../../config.json') });
 const genHTML = require('../lib/genPDFHTMLString');
@@ -24,7 +24,7 @@ function publishToWrapupQueue(body, status, reason) {
 				reason
 			})
 		},
-		[ constants.AMQ_INSTANCE ]
+		[constants.AMQ_INSTANCE]
 	);
 }
 
@@ -32,7 +32,7 @@ async function genPDF(obj) {
 	try {
 		return new Promise(async (resolve, reject) => {
 			obj.testDate = moment(obj.testDate, 'DD/MM/YYYY').format('DD-MM-YYYY');
-			obj.testTime = moment(obj.testTime, [ 'h:m:a', 'H:m' ]).format('HH:mm:ss');
+			obj.testTime = moment(obj.testTime, ['h:m:a', 'H:m']).format('HH:mm:ss');
 			obj.validUntil = moment(obj.testDate, 'DD-MM-YYYY').add(1, 'year').format('DD-MM-YYYY');
 
 			const prepped = Object.keys(obj).reduce((acc, k) => {
@@ -66,7 +66,7 @@ async function genPDF(obj) {
 
 			if (!fs.existsSync(filePath)) mkdirp.sync(filePath);
 
-			xvfb.startSync();
+			// xvfb.startSync();
 
 			wkhtmltopdf(
 				html,
@@ -80,7 +80,7 @@ async function genPDF(obj) {
 					disableSmartShrinking: true
 				},
 				async (err) => {
-					xvfb.stopSync();
+					// xvfb.stopSync();
 
 					if (err) return reject(err);
 
@@ -157,7 +157,7 @@ async function updateStockItem(body) {
 	return false;
 }
 
-module.exports = async function(msg, rejectable = true) {
+module.exports = async function (msg, rejectable = true) {
 	const o = msg.body.article;
 	const serno = o.articleSerialnumber.length ? o.articleSerialnumber : o['SERNO'];
 	let result = await updateStockItem(

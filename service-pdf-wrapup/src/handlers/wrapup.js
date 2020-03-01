@@ -2,11 +2,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const nconf = require('nconf');
 const moment = require('moment');
-const Redis = require('ioredis');
 const uuid = require('uuid').v4;
 const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + '/../../../config.json') });
-
-const redis = new Redis();
 
 async function copyPDFToFailedFolder(filepath) {
 	try {
@@ -25,28 +22,25 @@ function buildRedisKey(id, category) {
 	return 'jdj:logs:' + category + ':' + id;
 }
 
-module.exports = async function(msg, rejectable = true) {
-	console.log(msg.body);
-
+module.exports = async function (msg, rejectable = true) {
 	if (!msg.body.success && fs.existsSync(msg.body.filepath)) await copyPDFToFailedFolder(msg.body.filepath);
 
 	// remove file from watchdir
 	if (fs.existsSync(msg.body.filepath)) fs.unlinkSync(msg.body.filepath);
 
-	let logMsg;
+	let logMsg, message;
 
 	if (msg.body.success) {
+		message = `Certificaat ${msg.body.filename} succesvol gekoppeld aan artikel ${msg.body.articleNumber}`
 		logMsg = {
-			msg: `Certificaat ${msg.body.filename} succesvol gekoppeld aan artikel ${msg.body.articleNumber}`,
+			msg: message,
 			ts: moment().format('x'),
 			id: uuid()
 		};
 
-		await redis.set(buildRedisKey(logMsg.id, 'success'), JSON.stringify(logMsg));
+		await this.redis.set(buildRedisKey(logMsg.id, 'success'), JSON.stringify(logMsg));
 		notifyClients.call(this, 'stockItem', msg.body.article);
 	} else {
-		let message;
-
 		switch (msg.body.reason) {
 			case 'not_found':
 				message = `Geen artikel gevonden met nummer ${msg.body.articleNumber} uit het bestand ${msg.body
@@ -94,7 +88,22 @@ module.exports = async function(msg, rejectable = true) {
 		}
 
 		logMsg = { msg: message, ts: moment().format('x'), id: uuid() };
-		await redis.set(buildRedisKey(logMsg.id, 'failed'), JSON.stringify(logMsg));
+		await this.redis.set(buildRedisKey(logMsg.id, 'failed'), JSON.stringify(logMsg));
+	}
+
+	if (msg.body.pdf) {
+		const logEntry = {
+			Status: msg.body.success ? 'OK' : 'ERROR',
+			Bestandsnaam: msg.body.filename,
+			Artikelnummer: msg.body.articleNumber || '',
+			Serienummer: msg.body.serialNumber || '',
+			'Datum keuring': msg.body.date || '',
+			'Type PDF template': msg.body.type || '',
+			'Log bericht': message,
+			'Bestand locatie': msg.body.fullPath || ''
+		};
+
+		await this.redis.sadd(`jdj:pdf-reading:${moment().format('YYYY-MM-DD')}`, JSON.stringify(logEntry));
 	}
 
 	notifyClients.call(this, 'log', logMsg);

@@ -1,27 +1,10 @@
 const path = require('path');
 const fs = require('fs');
-const ObjectsToCsv = require('objects-to-csv');
-const moment = require('moment');
-
-const nconf = require('nconf');
-const cnf = nconf.argv().env().file({ file: path.resolve(__dirname + '/../../../config.json') });
 
 const textHelper = require('../lib/text');
 const dataHelper = require('../lib/data');
 const templates = require('../lib/templates');
-const csvOutput = typeof cnf.get('CSV') !== 'undefined' && cnf.get('CSV') === 'true' ? true : false;
-const results = [];
-const resultDefaults = { articleNumber: '', serialNumber: '', date: '', type: '' };
-const csvOutputDir = `${cnf.get('csvOutputDir') || '/tmp'}/pdf-batch-output-${moment().format(
-	'YYYY-MM-DD HH:mm:ss'
-)}.csv`;
-
 const constants = require('../../../resources/constants');
-
-async function addToCSV() {
-	const csv = new ObjectsToCsv(results);
-	await csv.toDisk(csvOutputDir);
-}
 
 function publishToWrapupQueue(body, status, reason) {
 	this.rabbot.publish(
@@ -30,14 +13,15 @@ function publishToWrapupQueue(body, status, reason) {
 			routingKey: constants.PDF_WRAPUP_BIND_KEY,
 			body: Object.assign(body, {
 				success: status,
-				reason
+				reason,
+				pdf: true
 			})
 		},
-		[ constants.AMQ_INSTANCE ]
+		[constants.AMQ_INSTANCE]
 	);
 }
 
-module.exports = async function(msg, rejectable = true) {
+module.exports = async function (msg, rejectable = true) {
 	let txt, gtxt, type, result;
 
 	const file = msg.body.filename;
@@ -87,11 +71,6 @@ module.exports = async function(msg, rejectable = true) {
 			e.message
 		);
 
-		if (csvOutput) {
-			results.push(Object.assign({ filename, status: 'ERROR', reason: e.message }, resultDefaults));
-			await addToCSV();
-		}
-
 		return rejectable ? msg.reject() : null;
 	}
 
@@ -114,11 +93,6 @@ module.exports = async function(msg, rejectable = true) {
 				false,
 				e.message
 			);
-
-			if (csvOutput) {
-				results.push(Object.assign({ filename, status: 'ERROR', reason: e.message }, resultDefaults));
-				await addToCSV();
-			}
 
 			return rejectable ? msg.reject() : null;
 		}
@@ -145,16 +119,6 @@ module.exports = async function(msg, rejectable = true) {
 			'no_identifier_found'
 		);
 
-		if (csvOutput) {
-			results.push(
-				Object.assign(
-					{ filename, status: 'SKIPPING', reason: 'no certificate identifier found' },
-					resultDefaults
-				)
-			);
-			await addToCSV();
-		}
-
 		return rejectable ? msg.reject() : null;
 	}
 
@@ -167,16 +131,6 @@ module.exports = async function(msg, rejectable = true) {
 			false,
 			'no_type_found'
 		);
-
-		if (csvOutput) {
-			results.push(
-				Object.assign(
-					{ filename, status: 'SKIPPING', reason: 'no type/supplier found' },
-					resultDefaults
-				)
-			);
-			await addToCSV();
-		}
 
 		return rejectable ? msg.reject() : null;
 	} else {
@@ -193,20 +147,6 @@ module.exports = async function(msg, rejectable = true) {
 
 		const data = Object.assign(result || {}, { type, filename, filepath: file || test });
 
-		if (csvOutput) {
-			results.push({
-				filename,
-				status: data.articleNumber ? 'OK' : 'NOT FOUND',
-				reason: '',
-				articleNumber: data.articleNumber || '',
-				serialNumber: data.serialNumber || '',
-				date: data.date || '',
-				type
-			});
-
-			await addToCSV();
-		}
-
 		if (data && data.articleNumber) {
 			this.rabbot.publish(
 				constants.CMD_EXCH,
@@ -214,7 +154,7 @@ module.exports = async function(msg, rejectable = true) {
 					routingKey: constants.PDF_MATCH_BIND_KEY,
 					body: data
 				},
-				[ constants.AMQ_INSTANCE ]
+				[constants.AMQ_INSTANCE]
 			);
 		} else {
 			publishToWrapupQueue.call(

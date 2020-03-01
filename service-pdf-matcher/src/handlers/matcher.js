@@ -36,10 +36,11 @@ function publishToWrapupQueue(body, status, reason) {
 			routingKey: constants.PDF_WRAPUP_BIND_KEY,
 			body: Object.assign(body, {
 				success: status,
-				reason
+				reason,
+				pdf: true
 			})
 		},
-		[ constants.AMQ_INSTANCE ]
+		[constants.AMQ_INSTANCE]
 	);
 }
 
@@ -139,7 +140,7 @@ async function findArticleByNumber(n) {
 	return false;
 }
 
-module.exports = async function(msg, rejectable = true) {
+module.exports = async function (msg, rejectable = true) {
 	const article = await findArticleByNumber(msg.body.articleNumber);
 
 	if (!article) {
