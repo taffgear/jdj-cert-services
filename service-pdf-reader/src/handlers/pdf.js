@@ -17,65 +17,45 @@ function publishToWrapupQueue(body, status, reason) {
 				pdf: true
 			})
 		},
-		[constants.AMQ_INSTANCE]
+		[ constants.AMQ_INSTANCE ]
 	);
 }
 
-module.exports = async function (msg, rejectable = true) {
+module.exports = async function(msg) {
 	let txt, gtxt, type, result;
 
 	const file = msg.body.filename;
-	const test = msg.body.test;
-	const DEBUG = msg.body.debug;
 
-	if (!file && !test) {
+	if (!file) {
 		console.error('No PDF input file given');
-		return rejectable ? msg.reject() : null;
+		return msg.reject();
 	}
 
 	try {
-		if (!fs.existsSync(file) && !fs.existsSync(test)) {
-			publishToWrapupQueue.call(
-				this,
-				Object.assign(msg.body, { filepath: file || test }),
-				false,
-				'file_not_found'
-			);
+		if (!fs.existsSync(file)) {
+			publishToWrapupQueue.call(this, Object.assign(msg.body, { filepath: file }), false, 'file_not_found');
 
-			console.error(`File ${file || test} not found.`);
-			return rejectable ? msg.reject() : null;
+			console.error(`File ${file} not found.`);
+			return msg.reject();
 		}
 	} catch (err) {
 		console.error(err);
 
-		publishToWrapupQueue.call(this, Object.assign(msg.body, { filepath: file || test }), false, e.message);
+		publishToWrapupQueue.call(this, Object.assign(msg.body, { filepath: file }), false, e.message);
 
-		return rejectable ? msg.reject() : null;
+		return msg.reject();
 	}
 
-	const filename = path.parse(file || test).base;
+	const filename = path.parse(file).base;
 
 	try {
-		if (!test) {
-			txt = await textHelper.PDFToText(file, true);
-		} else {
-			txt = fs.readFileSync(test).toString();
-		}
+		txt = await textHelper.PDFToText(file, true);
 	} catch (e) {
 		console.log(e);
 
-		publishToWrapupQueue.call(
-			this,
-			Object.assign(msg.body, { filepath: file || test, filename }),
-			false,
-			e.message
-		);
+		publishToWrapupQueue.call(this, Object.assign(msg.body, { filepath: file, filename }), false, e.message);
 
-		return rejectable ? msg.reject() : null;
-	}
-
-	if (file && DEBUG) {
-		console.log(`pdf-to-text output: \n${txt.replace(/(\r\n|\n|\r)/gm, ' ')}`);
+		return msg.reject();
 	}
 
 	type = dataHelper.getTemplateType(txt);
@@ -89,15 +69,13 @@ module.exports = async function (msg, rejectable = true) {
 
 			publishToWrapupQueue.call(
 				this,
-				Object.assign(msg.body, { filepath: file || test, filename, type }),
+				Object.assign(msg.body, { filepath: file, filename, type }),
 				false,
 				e.message
 			);
 
-			return rejectable ? msg.reject() : null;
+			return msg.reject();
 		}
-
-		if (DEBUG) console.log(`Google Vision API Output: \n ${gtxt}`);
 
 		// try to get type again with new input
 		type = dataHelper.getTemplateType(gtxt);
@@ -114,12 +92,12 @@ module.exports = async function (msg, rejectable = true) {
 
 		publishToWrapupQueue.call(
 			this,
-			Object.assign(msg.body, { filepath: file || test, filename, type }),
+			Object.assign(msg.body, { filepath: file, filename, type }),
 			false,
 			'no_identifier_found'
 		);
 
-		return rejectable ? msg.reject() : null;
+		return msg.reject();
 	}
 
 	if (!type) {
@@ -127,25 +105,23 @@ module.exports = async function (msg, rejectable = true) {
 
 		publishToWrapupQueue.call(
 			this,
-			Object.assign(msg.body, { filepath: file || test, filename }),
+			Object.assign(msg.body, { filepath: file, filename }),
 			false,
 			'no_type_found'
 		);
 
-		return rejectable ? msg.reject() : null;
+		return msg.reject();
 	} else {
 		result = dataHelper.getData(txt, type);
 
 		// Use Google API as fallback
-		if ((!result || !result.articleNumber) && templates[type].forceGoogleAPI && !test && !gtxt) {
+		if ((!result || !result.articleNumber) && templates[type].forceGoogleAPI && !gtxt) {
 			if (!gtxt) gtxt = await textHelper.PDFToText(file, false);
-
-			if (DEBUG) console.log(`Google Vision API Output (Fallback): \n ${gtxt}`);
 
 			result = dataHelper.getData(gtxt, type);
 		}
 
-		const data = Object.assign(result || {}, { type, filename, filepath: file || test });
+		const data = Object.assign(result || {}, { type, filename, filepath: file });
 
 		if (data && data.articleNumber) {
 			this.rabbot.publish(
@@ -154,12 +130,12 @@ module.exports = async function (msg, rejectable = true) {
 					routingKey: constants.PDF_MATCH_BIND_KEY,
 					body: data
 				},
-				[constants.AMQ_INSTANCE]
+				[ constants.AMQ_INSTANCE ]
 			);
 		} else {
 			publishToWrapupQueue.call(
 				this,
-				Object.assign(msg.body, { filepath: file || test, filename, type }),
+				Object.assign(msg.body, { filepath: file, filename, type }),
 				false,
 				'no_article_number_found'
 			);
@@ -167,6 +143,6 @@ module.exports = async function (msg, rejectable = true) {
 
 		console.log(JSON.stringify(data, null, 2));
 
-		if (rejectable) msg.ack();
+		msg.ack();
 	}
 };

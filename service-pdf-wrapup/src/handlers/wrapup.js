@@ -22,7 +22,7 @@ function buildRedisKey(id, category) {
 	return 'jdj:logs:' + category + ':' + id;
 }
 
-module.exports = async function (msg, rejectable = true) {
+module.exports = async function(msg) {
 	if (!msg.body.success && fs.existsSync(msg.body.filepath)) await copyPDFToFailedFolder(msg.body.filepath);
 
 	// remove file from watchdir
@@ -31,7 +31,7 @@ module.exports = async function (msg, rejectable = true) {
 	let logMsg, message;
 
 	if (msg.body.success) {
-		message = `Certificaat ${msg.body.filename} succesvol gekoppeld aan artikel ${msg.body.articleNumber}`
+		message = `Certificaat ${msg.body.filename} succesvol gekoppeld aan artikel ${msg.body.articleNumber}`;
 		logMsg = {
 			msg: message,
 			ts: moment().format('x'),
@@ -108,5 +108,5 @@ module.exports = async function (msg, rejectable = true) {
 
 	notifyClients.call(this, 'log', logMsg);
 
-	if (rejectable) msg.ack();
+	msg.ack();
 };

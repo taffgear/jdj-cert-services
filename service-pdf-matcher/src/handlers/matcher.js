@@ -7,6 +7,7 @@ const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + 
 
 const headers = { Authorization: 'Bearer ' + cnf.get('api:jwt_token') };
 const constants = require('../../../resources/constants');
+const helpers = require('../../../lib/helpers');
 
 async function copyPDFToFolder(article, original) {
 	const filePath = `${cnf.get('pdfDir')}/${article.PGROUP}/${article.GRPCODE}`;
@@ -40,70 +41,8 @@ function publishToWrapupQueue(body, status, reason) {
 				pdf: true
 			})
 		},
-		[constants.AMQ_INSTANCE]
+		[ constants.AMQ_INSTANCE ]
 	);
-}
-
-const genUpdateStockItemBody = (lastser, serno, status, itemno) => ({
-	lastser: lastser,
-	period: 365,
-	serno: serno,
-	status: parseInt(status) === 11 ? 0 : status,
-	pattest: 1,
-	patlastser: lastser,
-	patperiod: 365,
-	patpertype: 1,
-	itemno: itemno
-});
-
-const genCreateContDocBody = (itemno, filePath, lastser) => ({
-	type: 'ST',
-	key: itemno,
-	filename: filePath,
-	optflag: 0,
-	options: 0,
-	sid: lastser,
-	scantopdftype: 0,
-	name: 'Certificaat ' + moment(lastser).format('YYYY'),
-	showinweb: 0
-});
-
-async function createContdoc(body) {
-	try {
-		const result = await rp({
-			method: 'POST',
-			uri: `${cnf.get('api:uri')}/contdoc`,
-			headers,
-			body,
-			json: true
-		});
-
-		if (result && result.success && result.rowsAffected) return true;
-	} catch (e) {
-		console.error(e.message);
-		return false;
-	}
-
-	return false;
-}
-
-async function updateStockItem(body) {
-	try {
-		const result = await rp({
-			method: 'PUT',
-			uri: `${cnf.get('api:uri')}/stock`,
-			headers,
-			body,
-			json: true
-		});
-
-		if (result && result.success && result.rowsAffected) return true;
-	} catch (e) {
-		console.error(e.message);
-		return false;
-	}
-
-	return false;
 }
 
 async function findContdocItem(n) {
@@ -140,12 +79,12 @@ async function findArticleByNumber(n) {
 	return false;
 }
 
-module.exports = async function (msg, rejectable = true) {
+module.exports = async function(msg) {
 	const article = await findArticleByNumber(msg.body.articleNumber);
 
 	if (!article) {
 		publishToWrapupQueue.call(this, msg.body, false, 'not_found');
-		return rejectable ? msg.ack() : null;
+		return msg.ack();
 	}
 
 	const contDoc = await findContdocItem(msg.body.articleNumber);
@@ -155,14 +94,14 @@ module.exports = async function (msg, rejectable = true) {
 
 		if (m.isValid() && moment(m.format('YYYY-MM-DD')).isSameOrAfter(msg.body.date)) {
 			publishToWrapupQueue.call(this, msg.body, false, 'duplicate_contdoc');
-			return rejectable ? msg.ack() : null;
+			return msg.ack();
 		}
 	}
 
 	article['LASTSER#3'] = moment().format('YYYY-MM-DD');
 
-	let result = await updateStockItem(
-		genUpdateStockItemBody(
+	let result = await helpers.updateStockItem(
+		helpers.genUpdateStockItemBody(
 			msg.body.date || article['LASTSER#3'],
 			msg.body.serialNumber || article.SERNO || '',
 			article.STATUS,
@@ -172,7 +111,7 @@ module.exports = async function (msg, rejectable = true) {
 
 	if (!result) {
 		publishToWrapupQueue.call(this, msg.body, false, 'update_stock_error');
-		return rejectable ? msg.ack() : null;
+		return msg.ack();
 	}
 
 	const filename = await copyPDFToFolder(article, msg.body.filepath);
@@ -180,13 +119,13 @@ module.exports = async function (msg, rejectable = true) {
 
 	if (!filename) {
 		publishToWrapupQueue.call(this, msg.body, false, 'copy_file_failed');
-		return rejectable ? msg.ack() : null;
+		return msg.ack();
 	}
 
 	const winPath = `${cnf.get('pdfDirWin')}\\${article.PGROUP}\\${article.GRPCODE}\\${filename}`;
 
-	result = await createContdoc(
-		genCreateContDocBody(article.ITEMNO, winPath, msg.body.date || article['LASTSER#3'])
+	result = await helpers.createContdoc(
+		helpers.genCreateContDocBody(article.ITEMNO, winPath, msg.body.date || article['LASTSER#3'])
 	);
 
 	if (!result) {
@@ -194,10 +133,10 @@ module.exports = async function (msg, rejectable = true) {
 		if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
 
 		publishToWrapupQueue.call(this, msg.body, false, 'create_contdoc_error');
-		return rejectable ? msg.ack() : null;
+		return msg.ack();
 	}
 
 	publishToWrapupQueue.call(this, Object.assign(msg.body, { fullPath, article }), true, null);
 
-	if (rejectable) msg.ack();
+	msg.ack();
 };

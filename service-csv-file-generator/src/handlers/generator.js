@@ -4,15 +4,11 @@ const moment = require('moment');
 const wkhtmltopdf = require('wkhtmltopdf');
 const nconf = require('nconf');
 const mkdirp = require('mkdirp');
-const rp = require('request-promise');
-// const Xvfb = require('xvfb');
 
 const cnf = nconf.argv().env().file({ file: require('path').resolve(__dirname + '/../../../config.json') });
 const genHTML = require('../lib/genPDFHTMLString');
-const xvfb = new Xvfb();
-
-const headers = { Authorization: 'Bearer ' + cnf.get('api:jwt_token') };
 const constants = require('../../../resources/constants');
+const helpers = require('../../../lib/helpers');
 
 function publishToWrapupQueue(body, status, reason) {
 	this.rabbot.publish(
@@ -24,7 +20,7 @@ function publishToWrapupQueue(body, status, reason) {
 				reason
 			})
 		},
-		[constants.AMQ_INSTANCE]
+		[ constants.AMQ_INSTANCE ]
 	);
 }
 
@@ -32,7 +28,7 @@ async function genPDF(obj) {
 	try {
 		return new Promise(async (resolve, reject) => {
 			obj.testDate = moment(obj.testDate, 'DD/MM/YYYY').format('DD-MM-YYYY');
-			obj.testTime = moment(obj.testTime, ['h:m:a', 'H:m']).format('HH:mm:ss');
+			obj.testTime = moment(obj.testTime, [ 'h:m:a', 'H:m' ]).format('HH:mm:ss');
 			obj.validUntil = moment(obj.testDate, 'DD-MM-YYYY').add(1, 'year').format('DD-MM-YYYY');
 
 			const prepped = Object.keys(obj).reduce((acc, k) => {
@@ -66,8 +62,6 @@ async function genPDF(obj) {
 
 			if (!fs.existsSync(filePath)) mkdirp.sync(filePath);
 
-			// xvfb.startSync();
-
 			wkhtmltopdf(
 				html,
 				{
@@ -80,8 +74,6 @@ async function genPDF(obj) {
 					disableSmartShrinking: true
 				},
 				async (err) => {
-					// xvfb.stopSync();
-
 					if (err) return reject(err);
 
 					return resolve({ winFileName, fileName });
@@ -95,73 +87,16 @@ async function genPDF(obj) {
 	return null;
 }
 
-const genUpdateStockItemBody = (lastser, serno, status, itemno) => ({
-	lastser: lastser,
-	period: 365,
-	serno: serno,
-	status: parseInt(status) === 11 ? 0 : status,
-	pattest: 1,
-	patlastser: lastser,
-	patperiod: 365,
-	patpertype: 1,
-	itemno: itemno
-});
-
-const genCreateContDocBody = (itemno, filePath, lastser) => ({
-	type: 'ST',
-	key: itemno,
-	filename: filePath,
-	optflag: 0,
-	options: 0,
-	sid: lastser,
-	scantopdftype: 0,
-	name: 'Certificaat ' + moment(lastser, 'DD/MM/YYYY').format('YYYY'),
-	showinweb: 0
-});
-
-async function createContdoc(body) {
-	try {
-		const result = await rp({
-			method: 'POST',
-			uri: `${cnf.get('api:uri')}/contdoc`,
-			headers,
-			body,
-			json: true
-		});
-
-		if (result && result.success && result.rowsAffected) return true;
-	} catch (e) {
-		console.error(e.message);
-		return false;
-	}
-
-	return false;
-}
-
-async function updateStockItem(body) {
-	try {
-		const result = await rp({
-			method: 'PUT',
-			uri: `${cnf.get('api:uri')}/stock`,
-			headers,
-			body,
-			json: true
-		});
-
-		if (result && result.success && result.rowsAffected) return true;
-	} catch (e) {
-		console.error(e.message);
-		return false;
-	}
-
-	return false;
-}
-
-module.exports = async function (msg, rejectable = true) {
+module.exports = async function(msg) {
 	const o = msg.body.article;
 	const serno = o.articleSerialnumber.length ? o.articleSerialnumber : o['SERNO'];
-	let result = await updateStockItem(
-		genUpdateStockItemBody(moment(o.testDate, 'DD/MM/YYYY').format('YYYY-MM-DD'), serno, o.STATUS, o.ITEMNO)
+	let result = await helpers.updateStockItem(
+		helpers.genUpdateStockItemBody(
+			moment(o.testDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+			serno,
+			o.STATUS,
+			o.ITEMNO
+		)
 	);
 
 	if (!result) {
@@ -171,12 +106,14 @@ module.exports = async function (msg, rejectable = true) {
 			false,
 			'update_stock_error'
 		);
-		return rejectable ? msg.ack() : null;
+		return msg.reject();
 	}
 
 	const filePaths = await genPDF(o);
 
-	result = await createContdoc(genCreateContDocBody(o.ITEMNO, filePaths.winFileName, o.testDate));
+	result = await helpers.createContdoc(
+		helpers.genCreateContDocBody(o.ITEMNO, filePaths.winFileName, o.testDate, false)
+	);
 
 	if (!result) {
 		// remove copied file
@@ -188,7 +125,7 @@ module.exports = async function (msg, rejectable = true) {
 			false,
 			'create_contdoc_error'
 		);
-		return rejectable ? msg.ack() : null;
+		return msg.reject();
 	}
 
 	publishToWrapupQueue.call(
@@ -204,5 +141,5 @@ module.exports = async function (msg, rejectable = true) {
 		null
 	);
 
-	if (rejectable) msg.ack();
+	msg.ack();
 };

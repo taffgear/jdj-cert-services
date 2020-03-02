@@ -84,14 +84,14 @@ function mapCSVObjectsToStockItems(objects, stockItems) {
 	}, []);
 }
 
-module.exports = async function(msg, rejectable = true) {
+module.exports = async function(msg) {
 	const filename = path.parse(msg.body.filename).base;
 	const data = await csv().fromFile(msg.body.filename);
 	const results = await findStockItems(uniq(data.map((o) => o.articleNumber)));
 
 	if (!results || !results.length) {
 		publishToWrapupQueue.call(this, { filepath: msg.body.filename }, false, 'csv_item_lookup_failed');
-		return rejectable ? msg.reject() : null;
+		return msg.reject();
 	}
 
 	const mapped = mapCSVObjectsToStockItems(data, results);
@@ -116,5 +116,5 @@ module.exports = async function(msg, rejectable = true) {
 		}
 	});
 
-	if (rejectable) msg.ack();
+	msg.ack();
 };
