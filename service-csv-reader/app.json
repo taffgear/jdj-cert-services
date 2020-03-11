@@ -1,7 +1,7 @@
 {
 	"name": "csv-reader",
 	"script": "src/main.js",
-	"instances": 2,
+	"instances": 4,
 	"autorestart": true,
 	"watch": false,
 	"max_restarts": 20,
