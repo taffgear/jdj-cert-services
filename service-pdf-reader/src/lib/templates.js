@@ -99,7 +99,7 @@ module.exports = {
 	mastwin: {
 		text: {
 			articleNumber: {
-				regs: ['Bedrijfsnummer:(.*)Kenteken', 'Bedrijfsnummer:(.*)Bouwjaar']
+				regs: ['Bedrijfsnummer:(.*)Kenteken', 'Bedrijfs nummer:(.*)Bouwjaar']
 			},
 			serialNumber: {
 				regs: ['Serienummer:(.*)Bedrijfsnummer', 'Serienummer:(.*)Merk']
