@@ -102,7 +102,7 @@ module.exports = {
 				regs: ['Bedrijfsnummer:(.*)Kenteken', 'Bedrijfs nummer:(.*)Bouwjaar']
 			},
 			serialNumber: {
-				regs: ['Serienummer:(.*)Bedrijfsnummer', 'Serienummer:(.*)Merk']
+				regs: ['Serienummer:(.*)Bedrijfsnummer', 'Serienummer :(.*)Merk']
 			},
 			date: {
 				regs: ['Bouwjaar :(.*)1 Documenten', 'Inspectiedatum:(.*)Eigenaar'],
