@@ -15,7 +15,7 @@ module.exports = {
 				]
 			},
 			serialNumber: {
-				regs: [ 'Serial number :(.*)Machine No', 'Serienummer (.*)Machinenummer klant' ]
+				regs: ['Serial number :(.*)Machine No', 'Serienummer (.*)Machinenummer klant']
 			},
 			date: {
 				regs: [
@@ -30,13 +30,13 @@ module.exports = {
 	laspartners: {
 		text: {
 			articleNumber: {
-				regs: [ 'Machinenummer klant .(.*)Netspanning' ]
+				regs: ['Machinenummer klant .(.*)Netspanning']
 			},
 			serialNumber: {
-				regs: [ 'Machinenummer klant .(.*)Netspanning' ]
+				regs: ['Machinenummer klant .(.*)Netspanning']
 			},
 			date: {
-				regs: [ 'Datum(.*): J. de Jonge Lease BV' ],
+				regs: ['Datum(.*): J. de Jonge Lease BV'],
 				format: 'DD-MM-YYYY'
 			}
 		}
@@ -44,11 +44,11 @@ module.exports = {
 	'onafhankelijk controle bureel': {
 		text: {
 			articleNumber: {
-				regs: [ 'Toestel/Install. ID:(.*)Plaats van onderzoek' ]
+				regs: ['Toestel/Install. ID:(.*)Plaats van onderzoek']
 			},
 			serialNumber: null,
 			date: {
-				regs: [ 'Datum van onderzoek:(.*)Periodiciteit' ],
+				regs: ['Datum van onderzoek:(.*)Periodiciteit'],
 				format: 'DD/MM/YYYY'
 			}
 		}
@@ -68,13 +68,13 @@ module.exports = {
 	'technics trading & calibration': {
 		text: {
 			articleNumber: {
-				regs: [ 'Registratienummer:(.*)Naam klant' ]
+				regs: ['Registratienummer:(.*)Naam klant']
 			},
 			serialNumber: {
-				regs: [ 'Serienummer:(.*)Adres' ]
+				regs: ['Serienummer:(.*)Adres']
 			},
 			date: {
-				regs: [ 'Datum kalibratie:(.*)Datum afgifte' ],
+				regs: ['Datum kalibratie:(.*)Datum afgifte'],
 				format: 'D-MM-YYYY'
 			}
 		}
@@ -88,38 +88,38 @@ module.exports = {
 				]
 			},
 			serialNumber: {
-				regs: [ 'identificatienummer(.*)materiaal' ]
+				regs: ['identificatienummer(.*)materiaal']
 			},
 			date: {
-				regs: [ 'Datum(.*)Meetrapport', 'Date last inspection(.*)Toepassing' ],
-				format: [ 'DD-MM-YYYY', 'MM-YYYY' ]
+				regs: ['Datum(.*)Meetrapport', 'Date last inspection(.*)Toepassing'],
+				format: ['DD-MM-YYYY', 'MM-YYYY']
 			}
 		}
 	},
 	mastwin: {
 		text: {
 			articleNumber: {
-				regs: [ 'Bedrijfsnummer:(.*)Kenteken' ]
+				regs: ['Bedrijfsnummer:(.*)Kenteken', 'Bedrijfsnummer:(.*)Bouwjaar']
 			},
 			serialNumber: {
-				regs: [ 'Serienummer:(.*)Bedrijfsnummer' ]
+				regs: ['Serienummer:(.*)Bedrijfsnummer', 'Serienummer:(.*)Merk']
 			},
 			date: {
-				regs: [ 'Bouwjaar :(.*)1 Documenten' ],
-				format: 'DD-M-YYYY'
+				regs: ['Bouwjaar :(.*)1 Documenten', 'Inspectiedatum:(.*)Eigenaar'],
+				format: ['DD-M-YYYY', 'D-M-YYYY']
 			}
 		}
 	},
 	'mas twin': {
 		text: {
 			articleNumber: {
-				regs: [ 'Bedrijfs nummer:(.*)Bouwjaar' ]
+				regs: ['Bedrijfs nummer:(.*)Bouwjaar']
 			},
 			serialNumber: {
-				regs: [ 'Serienummer(.*)Merk' ]
+				regs: ['Serienummer(.*)Merk']
 			},
 			date: {
-				regs: [ 'Inspectiedatum:(.*)Type heftruck' ],
+				regs: ['Inspectiedatum:(.*)Type heftruck'],
 				format: 'DD-MM-YYYY'
 			}
 		}
@@ -135,7 +135,7 @@ module.exports = {
 			},
 			serialNumber: null,
 			date: {
-				regs: [ 'Date Inspected:(.*)Next Service' ],
+				regs: ['Date Inspected:(.*)Next Service'],
 				format: 'MM/YYYY'
 			}
 		}
@@ -162,18 +162,18 @@ module.exports = {
 					'\\(Signature of competent person\\)(.*)Inspecteren',
 					'\\(Signature of competent person\\)(.*)Smit Polyweb'
 				],
-				format: [ 'DD-MM-YYYY', 'MM-YYYY' ]
+				format: ['DD-MM-YYYY', 'MM-YYYY']
 			}
 		}
 	},
 	albic: {
 		text: {
 			articleNumber: {
-				regs: [ 'ID-nummer(.*)Merk' ]
+				regs: ['ID-nummer(.*)Merk']
 			},
 			serialNumber: null,
 			date: {
-				regs: [ 'Handtekening keurmeester:(.*)Naam keurmeester' ],
+				regs: ['Handtekening keurmeester:(.*)Naam keurmeester'],
 				format: 'DD-MM-YYYY'
 			}
 		}
@@ -182,11 +182,11 @@ module.exports = {
 		forceGoogleAPI: true,
 		text: {
 			articleNumber: {
-				regs: [ 'Ref.klant(.*)/rep', '1A0001YDO2B(.*)Fabrikaat' ]
+				regs: ['Ref.klant(.*)/rep', '1A0001YDO2B(.*)Fabrikaat']
 			},
 			serialNumber: null,
 			date: {
-				regs: [ 'Datum(.*)Ref.klant', 'Ref. Revin(.*)REVIN' ],
+				regs: ['Datum(.*)Ref.klant', 'Ref. Revin(.*)REVIN'],
 				format: 'DD-MM-YYYY'
 			}
 		}
@@ -194,11 +194,11 @@ module.exports = {
 	roca: {
 		text: {
 			articleNumber: {
-				regs: [ 'Barcode(.*)Productie' ]
+				regs: ['Barcode(.*)Productie']
 			},
 			serialNumber: null,
 			date: {
-				regs: [ 'Datum :(.*)Ron Campfens' ],
+				regs: ['Datum :(.*)Ron Campfens'],
 				format: 'D MMMM YYYY'
 			}
 		}
@@ -212,10 +212,10 @@ module.exports = {
 				]
 			},
 			serialNumber: {
-				regs: [ 'Device Serial Number:(.*)Next Cal Due' ]
+				regs: ['Device Serial Number:(.*)Next Cal Due']
 			},
 			date: {
-				regs: [ 'Calibration Test Certificate(.*)Device Serial Number' ],
+				regs: ['Calibration Test Certificate(.*)Device Serial Number'],
 				format: 'YYYY-MM-DD HH:mm:ss'
 			}
 		}
@@ -223,13 +223,13 @@ module.exports = {
 	hartwig: {
 		text: {
 			articleNumber: {
-				regs: [ '/ (.*)Date of Calibration' ]
+				regs: ['/ (.*)Date of Calibration']
 			},
 			serialNumber: {
-				regs: [ 'Serial Number :(.*) /' ]
+				regs: ['Serial Number :(.*) /']
 			},
 			date: {
-				regs: [ 'Date of Calibration :(.*)Calibration due' ],
+				regs: ['Date of Calibration :(.*)Calibration due'],
 				format: 'DD-MM-YYYY'
 			}
 		}
