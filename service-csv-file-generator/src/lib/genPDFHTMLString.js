@@ -120,6 +120,9 @@ module.exports = (obj) => {
 		obj.PATSerialnumber.value +
 		`</td>
                     </tr>
+		    <tr>
+                      <td class="cls_004">NEN3140</td>
+                    </tr>
                     <tr>
                       <td class="cls_004">&nbsp;</td>
                     </tr>
