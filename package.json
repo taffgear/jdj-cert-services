@@ -24,7 +24,7 @@
 		"rabbot": "^2.1.0",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.5",
-		"socket.io": "2.0.4",
+		"socket.io": "2.4.0",
 		"socketio-jwt": "^4.5.0",
 		"uuid": "^7.0.1",
 		"wkhtmltopdf": "^0.3.4",
